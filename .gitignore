@@ -1,6 +1,11 @@
 .idea
+.git
 *.iml
 target
 node_modules
 **/generated-sources
 **/npm-debug.log
+mvnw
+mvnw.cmd
+.gitignore
+.DS_Store
