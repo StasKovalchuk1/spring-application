@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Entity
 @Data
+@Table(name = "EAR_USER")
 public class User extends AbstractEntity{
     @Column(nullable = false)
     private String username;

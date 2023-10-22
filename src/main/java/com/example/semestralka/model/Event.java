@@ -18,6 +18,9 @@ public class Event extends AbstractEntity{
     @Column(nullable = false)
     private int price;
 
+    @Column(nullable = false)
+    private boolean isFinished = false;
+
     @ManyToMany
     private List<Genre> genres;
 
