@@ -3,22 +3,15 @@ package com.example.semestralka.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.security.PublicKey;
+import java.util.List;
+
 @Entity
 @Data
 @Table(name = "EAR_USER")
-public class User extends AbstractEntity{
-    @Column(nullable = false)
-    private String username;
+public class User extends Person{
 
-    @Column(nullable = false)
-    private int phoneNumber;
+    @OneToMany(mappedBy = "user")
+    public List<Favorite> favorites;
 
-    @Column(nullable = false)
-    private String email;
-
-    @Enumerated(EnumType.STRING)
-    private Role role;
-
-    @OneToOne
-    private Archive order;
 }

@@ -1,9 +1,6 @@
 package com.example.semestralka.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.List;
@@ -11,8 +8,14 @@ import java.util.List;
 @Entity
 @Data
 public class Genre extends AbstractEntity{
+    @Column(nullable = false)
     private String name;
 
-    @ManyToMany(mappedBy = "genres")
-    private List<Event> events;
+    @Override
+    public String toString() {
+        return "Genre{" +
+                "name='" + name + '\'' +
+                "}";
+    }
+
 }

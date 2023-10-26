@@ -22,8 +22,11 @@ public class Event extends AbstractEntity{
     private boolean isFinished = false;
 
     @ManyToMany
+    @OrderBy("name")
+    @JoinTable(name = "event_genre")
     private List<Genre> genres;
 
-    @OneToMany(mappedBy = "event")
-    private List<Ticket> ticketsForEvent;
+    @ManyToOne
+    @JoinColumn(name = "club_id")
+    public Club club;
 }
