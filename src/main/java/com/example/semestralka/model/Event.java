@@ -21,6 +21,9 @@ public class Event extends AbstractEntity{
     @Column(nullable = false)
     private boolean isFinished = false;
 
+    @Column(nullable = false)
+    private boolean isAccepted = false;
+
     @ManyToMany
     @OrderBy("name")
     @JoinTable(name = "event_genre")
