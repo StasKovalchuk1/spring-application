@@ -1,21 +1,24 @@
 package com.example.semestralka.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.List;
 
 @Entity
 @Data
-public class Favorite extends AbstractEntity{
+public class Favorite{
+
+    @EmbeddedId
+    private FavoriteId favoriteId;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @MapsId("userId")
     public User user;
 
     @ManyToOne
     @JoinColumn(name = "event_id")
+    @MapsId("eventId")
     public Event event;
 }
