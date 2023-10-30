@@ -1,10 +1,14 @@
 package com.example.semestralka.services;
 
 import com.example.semestralka.data.EventRepository;
+import com.example.semestralka.data.GenreRepository;
 import com.example.semestralka.model.Event;
+import com.example.semestralka.model.Genre;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -15,6 +19,10 @@ public class EventService {
     @Autowired
     public EventService(EventRepository eventRepo) {
         this.eventRepo = eventRepo;
+    }
+
+    public List<Event> getUpcomingEventsByGenre(List<Genre> genres) {
+        return eventRepo.findUpcomingEventsByGenres(genres);
     }
 
     public Event find(Integer id){
