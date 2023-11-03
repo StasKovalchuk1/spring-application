@@ -2,6 +2,7 @@ package com.example.semestralka.services;
 
 import com.example.semestralka.data.FavoriteRepository;
 import com.example.semestralka.model.Favorite;
+import com.example.semestralka.model.FavoriteId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,10 +19,10 @@ public class FavoriteService {
         this.favoriteRepo = favoriteRepo;
     }
 
-//    public Favorite find(Integer id){
-//        Objects.requireNonNull(id);
-//        return favoriteRepo.findById(id).orElse(null);
-//    }
+    public Favorite find(FavoriteId id){
+        Objects.requireNonNull(id);
+        return favoriteRepo.findById(id).orElse(null);
+    }
 
     public Iterable<Favorite> findAll(){
         try {
@@ -36,24 +37,24 @@ public class FavoriteService {
         favoriteRepo.save(favorite);
     }
 
-//    @Transactional
-//    public void update(Favorite favorite){
-//        Objects.requireNonNull(favorite);
-//        if (exists(favorite.getId())) {
-//            favoriteRepo.save(favorite);
-//        }
-//    }
+    @Transactional
+    public void update(Favorite favorite){
+        Objects.requireNonNull(favorite);
+        if (exists(favorite.getId())) {
+            favoriteRepo.save(favorite);
+        }
+    }
 
-//    @Transactional
-//    public void delete(Favorite favorite){
-//        Objects.requireNonNull(favorite);
-//        if (exists(favorite.getId())) {
-//            favoriteRepo.delete(favorite);
-//        }
-//    }
+    @Transactional
+    public void delete(Favorite favorite){
+        Objects.requireNonNull(favorite);
+        if (exists(favorite.getId())) {
+            favoriteRepo.delete(favorite);
+        }
+    }
 
-//    public boolean exists(Integer id){
-//        Objects.requireNonNull(id);
-//        return  favoriteRepo.existsById(id);
-//    }
+    public boolean exists(FavoriteId id){
+        Objects.requireNonNull(id);
+        return  favoriteRepo.existsById(id);
+    }
 }

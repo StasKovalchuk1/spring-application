@@ -11,5 +11,9 @@ import java.util.List;
 public class Club extends AbstractEntity{
 
     @OneToMany(mappedBy = "club")
-    public List<Event> event;
+    public List<Event> events;
+
+    public void addEvent(Event event){
+        events.add(event);
+    }
 }

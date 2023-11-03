@@ -10,7 +10,7 @@ import java.util.List;
 public class Favorite{
 
     @EmbeddedId
-    private FavoriteId favoriteId;
+    private FavoriteId id;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
