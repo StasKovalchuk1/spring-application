@@ -64,9 +64,9 @@ public class EventService {
     }
 
     @Transactional(readOnly = true)
-    public List<Event> getUpcomingByGenre(List<Genre> genres) {
-        Objects.requireNonNull(genres);
-        return eventRepo.getUpcomingEventsByGenres(genres);
+    public List<Event> getUpcomingByGenre(List<Genre> genresId) {
+        Objects.requireNonNull(genresId);
+        return eventRepo.getUpcomingEventsByGenres(genresId);
     }
 
     @Transactional(readOnly = true)

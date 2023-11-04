@@ -3,6 +3,7 @@ package com.example.semestralka.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -19,10 +20,10 @@ public class Event extends AbstractEntity{
     private int price;
 
     @Column(nullable = false)
-    private boolean isFinished = false;
+    private boolean finished = false;
 
     @Column(nullable = false)
-    private boolean isAccepted = false;
+    private boolean accepted = false;
 
     @ManyToMany
     @OrderBy("name")
@@ -32,4 +33,9 @@ public class Event extends AbstractEntity{
     @ManyToOne
     @JoinColumn(name = "club_id")
     public Club club;
+
+    public void addGenre(Genre genre) {
+        if (genres == null) {genres = new ArrayList<>();}
+        genres.add(genre);
+    }
 }
