@@ -26,6 +26,7 @@ public class EventService {
         this.clubRepo = clubRepo;
     }
 
+    @Transactional
     public void acceptEvent(Event event, Club club){
         Objects.requireNonNull(event);
         Objects.requireNonNull(club);
@@ -36,6 +37,7 @@ public class EventService {
         clubRepo.save(club);
     }
 
+    @Transactional(readOnly = true)
     public List<Event> getAllFavorite(User user){
         List<Favorite> favorites = favoriteRepo.findAllByUserId(user.getId());
         List<Event> favoriteEvents = new ArrayList<>();
@@ -45,29 +47,35 @@ public class EventService {
         return favoriteEvents;
     }
 
+    @Transactional(readOnly = true)
     public List<Event> getAllNotAccepted(){
         return eventRepo.getAllByAcceptedIsFalse();
     }
 
+    @Transactional(readOnly = true)
     public List<Event> getAllByClub(Club club){
         Objects.requireNonNull(club);
         return eventRepo.getAllByClub(club);
     }
 
+    @Transactional(readOnly = true)
     public List<Event> getAllNotFinished(){
         return eventRepo.getAllByFinishedIsFalse();
     }
 
+    @Transactional(readOnly = true)
     public List<Event> getUpcomingByGenre(List<Genre> genres) {
         Objects.requireNonNull(genres);
         return eventRepo.getUpcomingEventsByGenres(genres);
     }
 
+    @Transactional(readOnly = true)
     public Event find(Integer id){
         Objects.requireNonNull(id);
         return eventRepo.findById(id).orElse(null);
     }
 
+    @Transactional(readOnly = true)
     public Iterable<Event> findAll(){
         try {
             return eventRepo.findAll();

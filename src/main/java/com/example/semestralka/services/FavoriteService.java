@@ -24,6 +24,7 @@ public class FavoriteService {
         return favoriteRepo.findById(id).orElse(null);
     }
 
+    @Transactional(readOnly = true)
     public Iterable<Favorite> findAll(){
         try {
             return favoriteRepo.findAll();

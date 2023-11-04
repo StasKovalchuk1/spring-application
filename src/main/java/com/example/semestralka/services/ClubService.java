@@ -17,12 +17,13 @@ public class ClubService {
         this.clubRepo = clubRepo;
     }
 
-
+    @Transactional(readOnly = true)
     public Club find(Integer id){
         Objects.requireNonNull(id);
         return clubRepo.findById(id).orElse(null);
     }
 
+    @Transactional(readOnly = true)
     public Iterable<Club> findAll(){
         try {
             return clubRepo.findAll();

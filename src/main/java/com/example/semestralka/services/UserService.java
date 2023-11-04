@@ -22,6 +22,7 @@ public class UserService {
         return userRepo.findById(id).orElse(null);
     }
 
+    @Transactional(readOnly = true)
     public Iterable<User> findAll(){
         try {
             return userRepo.findAll();

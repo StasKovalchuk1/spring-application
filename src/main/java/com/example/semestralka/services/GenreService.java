@@ -17,11 +17,13 @@ public class GenreService {
         this.genreRepo = genreRepo;
     }
 
+    @Transactional(readOnly = true)
     public Genre find(Integer id){
         Objects.requireNonNull(id);
         return genreRepo.findById(id).orElse(null);
     }
 
+    @Transactional(readOnly = true)
     public Iterable<Genre> findAll(){
         try {
             return genreRepo.findAll();
