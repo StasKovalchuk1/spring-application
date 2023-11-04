@@ -1,8 +1,5 @@
 package com.example.semestralka.enviroment;
-import com.example.semestralka.model.Club;
-import com.example.semestralka.model.Event;
-import com.example.semestralka.model.Genre;
-import com.example.semestralka.model.User;
+import com.example.semestralka.model.*;
 
 import java.util.Random;
 
@@ -58,6 +55,17 @@ public class Generator {
         final Club c = new Club();
         c.setName("name" + randomInt());
         return c;
+    }
+
+    public static Favorite generateFavorite(Event event, User user) {
+        final Favorite f = new Favorite();
+        final FavoriteId favoriteId = new FavoriteId();
+        favoriteId.setUserId(user.getId());
+        favoriteId.setEventId(event.getId());
+        f.setId(favoriteId);
+        f.setUser(user);
+        f.setEvent(event);
+        return f;
     }
 
 }

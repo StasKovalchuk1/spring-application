@@ -22,5 +22,8 @@ public interface EventRepository  extends CrudRepository<Event, Integer> {
     @Query("select distinct e from Event e where e.club = :club")
     List<Event> getAllByClub(Club club);
 
+    @Query("select distinct e from Event e where e.finished = false and e.club = :club")
+    List<Event> getAllUpcomingByClub(Club club);
+
 }
 

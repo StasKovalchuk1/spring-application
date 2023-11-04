@@ -1,8 +1,10 @@
 package com.example.semestralka.services;
 
 import com.example.semestralka.data.FavoriteRepository;
+import com.example.semestralka.model.Event;
 import com.example.semestralka.model.Favorite;
 import com.example.semestralka.model.FavoriteId;
+import com.example.semestralka.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,9 +35,17 @@ public class FavoriteService {
         }
     }
     @Transactional
-    public void save(Favorite favorite){
-        Objects.requireNonNull(favorite);
-        favoriteRepo.save(favorite);
+    public void save(Event event, User user){
+        Objects.requireNonNull(event);
+        Objects.requireNonNull(user);
+        final Favorite f = new Favorite();
+        final FavoriteId favoriteId = new FavoriteId();
+        favoriteId.setUserId(user.getId());
+        favoriteId.setEventId(event.getId());
+        f.setId(favoriteId);
+        f.setUser(user);
+        f.setEvent(event);
+        favoriteRepo.save(f);
     }
 
     @Transactional
