@@ -1,6 +1,7 @@
 package com.example.semestralka.data;
 
 import com.example.semestralka.SemestralkaApplication;
+import com.example.semestralka.enviroment.Generator;
 import com.example.semestralka.model.Club;
 import com.example.semestralka.model.Event;
 import com.example.semestralka.model.Genre;
@@ -11,9 +12,11 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.test.context.ActiveProfiles;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.semestralka.enviroment.Generator.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
@@ -30,14 +33,10 @@ public class EventRepositoryTest {
 
     @Test
     public void createEvent() {
-        final Club club = new Club();
-        club.setName("xyz");
+        final Club club = generateClub();
 
-        final Event event = new Event();
-        event.setName("best party");
+        final Event event = generateEvent();
         event.setClub(club);
-        event.setDescription("blablabla");
-        event.setPrice(500);
 
         eventRepository.save(event);
         assertNotNull(event.getId());
@@ -45,21 +44,13 @@ public class EventRepositoryTest {
 
     @Test
     public void findUpcomingEventsByGenres() {
-        final Event event1 = new Event();
-        event1.setName("party1");
-        event1.setDescription("blablabla");
-        event1.setPrice(500);
+        final Event event1 = generateEvent();
 
-        final Event event2 = new Event();
-        event2.setName("party2");
-        event2.setDescription("blablabla");
-        event2.setPrice(500);
+        final Event event2 = generateEvent();
 
-        final Genre genre1 = new Genre();
-        genre1.setName("1");
+        final Genre genre1 = generateGenre();
+        final Genre genre2 = generateGenre();
         genreRepository.save(genre1);
-        final Genre genre2 = new Genre();
-        genre2.setName("2");
         genreRepository.save(genre2);
 
         List<Genre> genres = new ArrayList<>();
