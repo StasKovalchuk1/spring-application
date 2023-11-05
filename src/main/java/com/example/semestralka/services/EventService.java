@@ -33,12 +33,13 @@ public class EventService {
 
         event.setAccepted(true);
         club.addEvent(event);
+        event.setClub(club);
         eventRepo.save(event);
         clubRepo.save(club);
     }
 
     @Transactional(readOnly = true)
-    public List<Event> getAllFavorite(User user){
+    public List<Event> getAllFavoriteEvents(User user){
         List<Favorite> favorites = favoriteRepo.findAllByUserId(user.getId());
         List<Event> favoriteEvents = new ArrayList<>();
         for (Favorite favorite : favorites) {

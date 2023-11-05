@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -18,6 +19,7 @@ public class Club extends AbstractEntity{
     public List<Event> events;
 
     public void addEvent(Event event){
+        if (events == null) events = new ArrayList<>();
         events.add(event);
     }
 }
