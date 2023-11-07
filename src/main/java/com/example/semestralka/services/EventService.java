@@ -30,12 +30,13 @@ public class EventService {
     public void acceptEvent(Event event, Club club){
         Objects.requireNonNull(event);
         Objects.requireNonNull(club);
-
-        event.setAccepted(true);
-        club.addEvent(event);
-        event.setClub(club);
-        eventRepo.save(event);
-        clubRepo.save(club);
+        if (clubRepo.existsById(club.getId())&&eventRepo.existsById(event.getId())){
+            event.setAccepted(true);
+            club.addEvent(event);
+            event.setClub(club);
+            eventRepo.save(event);
+            clubRepo.save(club);
+        }
     }
 
     @Transactional(readOnly = true)
@@ -56,18 +57,30 @@ public class EventService {
     @Transactional(readOnly = true)
     public List<Event> getAllByClub(Club club){
         Objects.requireNonNull(club);
-        return eventRepo.getAllByClub(club);
+        try {
+            return eventRepo.getAllByClub(club);
+        } catch (RuntimeException e) {
+            throw new RuntimeException("There are no events in this club");
+        }
     }
 
     @Transactional(readOnly = true)
     public List<Event> getAllNotFinished(){
-        return eventRepo.getAllByFinishedIsFalse();
+        try {
+            return eventRepo.getAllByFinishedIsFalse();
+        } catch (RuntimeException e) {
+            throw new RuntimeException("There are no not finished events");
+        }
     }
 
     @Transactional(readOnly = true)
     public List<Event> getUpcomingByGenre(List<Genre> genresId) {
         Objects.requireNonNull(genresId);
-        return eventRepo.getUpcomingEventsByGenres(genresId);
+        try {
+            return eventRepo.getUpcomingEventsByGenres(genresId);
+        } catch (RuntimeException e) {
+            throw new RuntimeException("There are no upcoming events by this genre");
+        }
     }
 
     @Transactional(readOnly = true)
@@ -85,9 +98,15 @@ public class EventService {
         }
     }
     @Transactional
-    public void save(Event event){
+    public void save(Event event, Club club){
         Objects.requireNonNull(event);
-        eventRepo.save(event);
+        Objects.requireNonNull(club);
+        if (clubRepo.existsById(club.getId())) {
+            event.setClub(club);
+            club.addEvent(event);
+            clubRepo.save(club);
+            eventRepo.save(event);
+        }
     }
 
     @Transactional

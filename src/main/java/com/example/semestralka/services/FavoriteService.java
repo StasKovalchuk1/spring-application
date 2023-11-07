@@ -1,6 +1,7 @@
 package com.example.semestralka.services;
 
 import com.example.semestralka.data.FavoriteRepository;
+import com.example.semestralka.data.UserRepository;
 import com.example.semestralka.model.Event;
 import com.example.semestralka.model.Favorite;
 import com.example.semestralka.model.FavoriteId;
@@ -15,12 +16,15 @@ import java.util.Objects;
 public class FavoriteService {
 
     private final FavoriteRepository favoriteRepo;
+    private final UserRepository userRepo;
 
     @Autowired
-    public FavoriteService(FavoriteRepository favoriteRepo) {
+    public FavoriteService(FavoriteRepository favoriteRepo, UserRepository userRepo) {
         this.favoriteRepo = favoriteRepo;
+        this.userRepo = userRepo;
     }
 
+    @Transactional(readOnly = true)
     public Favorite find(FavoriteId id){
         Objects.requireNonNull(id);
         return favoriteRepo.findById(id).orElse(null);
@@ -38,14 +42,16 @@ public class FavoriteService {
     public void save(Event event, User user){
         Objects.requireNonNull(event);
         Objects.requireNonNull(user);
-        final Favorite f = new Favorite();
-        final FavoriteId favoriteId = new FavoriteId();
-        favoriteId.setUserId(user.getId());
-        favoriteId.setEventId(event.getId());
-        f.setId(favoriteId);
-        f.setUser(user);
-        f.setEvent(event);
-        favoriteRepo.save(f);
+        if (userRepo.existsById(user.getId())) {
+            final Favorite f = new Favorite();
+            final FavoriteId favoriteId = new FavoriteId();
+            favoriteId.setUserId(user.getId());
+            favoriteId.setEventId(event.getId());
+            f.setId(favoriteId);
+            f.setUser(user);
+            f.setEvent(event);
+            favoriteRepo.save(f);
+        }
     }
 
     @Transactional
