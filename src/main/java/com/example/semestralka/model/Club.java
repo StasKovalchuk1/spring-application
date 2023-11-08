@@ -22,4 +22,10 @@ public class Club extends AbstractEntity{
         if (events == null) events = new ArrayList<>();
         events.add(event);
     }
+
+    public void removeEvent(Event event){
+        if (event!=null){
+            events.remove(event);
+        }
+    }
 }
