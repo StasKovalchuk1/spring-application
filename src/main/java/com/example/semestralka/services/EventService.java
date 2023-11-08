@@ -74,10 +74,10 @@ public class EventService {
     }
 
     @Transactional(readOnly = true)
-    public List<Event> getUpcomingByGenre(List<Genre> genresId) {
-        Objects.requireNonNull(genresId);
+    public List<Event> getUpcomingByGenre(List<Genre> genres) {
+        Objects.requireNonNull(genres);
         try {
-            return eventRepo.getUpcomingEventsByGenres(genresId);
+            return eventRepo.getUpcomingEventsByGenres(genres);
         } catch (RuntimeException e) {
             throw new RuntimeException("There are no upcoming events by this genre");
         }
