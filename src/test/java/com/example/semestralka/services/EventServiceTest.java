@@ -19,43 +19,37 @@ public class EventServiceTest {
 
     @Autowired
     private EventService eventService;
+
     @Autowired
-    private EventRepository eventRepo;
-    @Autowired
-    private ClubRepository clubRepo;
+    private ClubService clubService;
 
     private Event event;
     private Club club;
 
     @BeforeEach
     public void setUp(){
-        event = Generator.generateEvent();
+        event = Generator.generateUpcomingEvent();
         club = Generator.generateClub();
-        eventRepo.save(event);
-        clubRepo.save(club);
+        clubService.save(club);
+        eventService.save(event, club);
     }
     @Test
     public void acceptEventSetsAcceptedTrueToEvent(){
-        eventService.acceptEvent(event,club);
+        eventService.acceptEvent(event);
         assertTrue(event.isAccepted());
     }
 
     @Test
     public void acceptEventAddsEventToClub(){
-        eventService.acceptEvent(event,club);
+        eventService.acceptEvent(event);
         assertTrue(club.getEvents().contains(event));
     }
 
-    @Test
-    public void acceptEventSetsClubToEvent(){
-        eventService.acceptEvent(event,club);
-        assertEquals(event.getClub(), club);
-    }
 
     @Test
-    public void saveSetsClubToEventAndAddsEventToClub(){
-        eventService.save(event,club);
-        Event resEvent = eventRepo.findById(event.getId()).orElse(null);
+    public void acceptEventSetsClubToEventAndAddsEventToClub(){
+        eventService.acceptEvent(event);
+        Event resEvent = eventService.find(event.getId());
         Club resClub = resEvent.getClub();
         assertEquals(resClub, club);
         assertTrue(resClub.getEvents().contains(resEvent));

@@ -2,7 +2,7 @@ package com.example.semestralka.services;
 
 import com.example.semestralka.data.EventRepository;
 import com.example.semestralka.data.FavoriteRepository;
-import com.example.semestralka.data.UserRepository;
+import com.example.semestralka.data.PersonRepository;
 import com.example.semestralka.enviroment.Generator;
 import com.example.semestralka.model.Event;
 import com.example.semestralka.model.Favorite;
@@ -14,10 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.hamcrest.Matchers.any;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @Transactional
@@ -26,7 +24,7 @@ public class FavoriteServiceTest {
     @Autowired
     private FavoriteService favoriteService;
     @Autowired
-    private UserRepository userRepo;
+    private PersonRepository personRepository;
     @Autowired
     private EventRepository eventRepo;
     @Autowired
@@ -34,10 +32,10 @@ public class FavoriteServiceTest {
 
     @Test
     public void saveCreatesNewFavorite(){
-        Event event = Generator.generateEvent();
+        Event event = Generator.generateUpcomingEvent();
         User user = Generator.generateUser();
         eventRepo.save(event);
-        userRepo.save(user);
+        personRepository.save(user);
 
         favoriteService.save(event, user);
 

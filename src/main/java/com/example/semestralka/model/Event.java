@@ -3,7 +3,9 @@ package com.example.semestralka.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -20,7 +22,8 @@ public class Event extends AbstractEntity{
     private int price;
 
     @Column(nullable = false)
-    private boolean finished = false;
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime eventDate;
 
     @Column(nullable = false)
     private boolean accepted = false;

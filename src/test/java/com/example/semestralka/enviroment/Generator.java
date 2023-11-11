@@ -1,6 +1,8 @@
 package com.example.semestralka.enviroment;
 import com.example.semestralka.model.*;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Random;
 
 public class Generator {
@@ -43,11 +45,25 @@ public class Generator {
         return p;
     }
 
-    public static Event generateEvent() {
+    public static Event generateUpcomingEvent() {
         final Event e = new Event();
         e.setName("name" + randomInt());
         e.setPrice(randomInt());
         e.setDescription("description" + randomInt());
+        LocalDateTime currentDate = LocalDateTime.now();
+        LocalDateTime eventDate = currentDate.plus(1, ChronoUnit.DAYS);
+        e.setEventDate(eventDate);
+        return e;
+    }
+
+    public static Event generateFinishedEvent() {
+        final Event e = new Event();
+        e.setName("name" + randomInt());
+        e.setPrice(randomInt());
+        e.setDescription("description" + randomInt());
+        LocalDateTime currentDate = LocalDateTime.now();
+        LocalDateTime eventDate = currentDate.minus(1, ChronoUnit.DAYS);
+        e.setEventDate(eventDate);
         return e;
     }
 

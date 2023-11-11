@@ -8,7 +8,7 @@ import java.util.List;
 
 @Entity
 @Data
-@Table(name = "EAR_USER")
+@DiscriminatorValue("USER")
 public class User extends Person{
 
     @OneToMany(mappedBy = "user")

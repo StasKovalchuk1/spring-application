@@ -27,7 +27,7 @@ public class FavoriteRepositoryTest {
     public FavoriteRepository favoriteRepository;
 
     @Autowired
-    public UserRepository userRepository;
+    public PersonRepository personRepository;
 
     @Autowired
     public EventRepository eventRepository;
@@ -35,11 +35,11 @@ public class FavoriteRepositoryTest {
     @Test
     public void findAllByUserIdTest() {
         User user = generateUser();
-        Event event1 = generateEvent();
-        Event event2 = generateEvent();
-        Event event3 = generateEvent();
+        Event event1 = generateUpcomingEvent();
+        Event event2 = generateUpcomingEvent();
+        Event event3 = generateUpcomingEvent();
 
-        userRepository.save(user);
+        personRepository.save(user);
         eventRepository.save(event1);
         eventRepository.save(event2);
         eventRepository.save(event3);

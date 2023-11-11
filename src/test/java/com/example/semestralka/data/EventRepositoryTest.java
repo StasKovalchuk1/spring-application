@@ -37,7 +37,7 @@ public class EventRepositoryTest {
     public void createEventTest() {
         final Club club = generateClub();
 
-        final Event event = generateEvent();
+        final Event event = generateUpcomingEvent();
         event.setClub(club);
 
         eventRepository.save(event);
@@ -46,9 +46,9 @@ public class EventRepositoryTest {
 
     @Test
     public void findUpcomingEventsByGenresTest() {
-        final Event event1 = generateEvent();
+        final Event event1 = generateUpcomingEvent();
 
-        final Event event2 = generateEvent();
+        final Event event2 = generateUpcomingEvent();
 
         final Genre genre1 = generateGenre();
         final Genre genre2 = generateGenre();
@@ -81,10 +81,9 @@ public class EventRepositoryTest {
 
     @Test
     public void getAllByClubTest() {
-        Event event1 = generateEvent();
-        Event event2 = generateEvent();
-        Event event3 = generateEvent();
-        event3.setFinished(true);
+        Event event1 = generateUpcomingEvent();
+        Event event2 = generateUpcomingEvent();
+        Event event3 = generateFinishedEvent();
 
         Club club = generateClub();
 
@@ -104,10 +103,9 @@ public class EventRepositoryTest {
 
     @Test
     public void getAllUpcomingByClubTest() {
-        Event event1 = generateEvent();
-        Event event2 = generateEvent();
-        Event event3 = generateEvent();
-        event3.setFinished(true);
+        Event event1 = generateUpcomingEvent();
+        Event event2 = generateUpcomingEvent();
+        Event event3 = generateFinishedEvent();
 
         Club club = generateClub();
 

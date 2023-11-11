@@ -16,37 +16,34 @@ import java.util.Objects;
 public class EventService {
 
     private final EventRepository eventRepo;
-    private final FavoriteRepository favoriteRepo;
     private final ClubRepository clubRepo;
 
     @Autowired
-    public EventService(EventRepository eventRepo, FavoriteRepository favoriteRepo, ClubRepository clubRepo) {
+    public EventService(EventRepository eventRepo, ClubRepository clubRepo) {
         this.eventRepo = eventRepo;
-        this.favoriteRepo = favoriteRepo;
         this.clubRepo = clubRepo;
     }
 
     @Transactional
-    public void acceptEvent(Event event, Club club){
+    public void save(Event event, Club club){
         Objects.requireNonNull(event);
         Objects.requireNonNull(club);
-        if (clubRepo.existsById(club.getId())&&eventRepo.existsById(event.getId())){
-            event.setAccepted(true);
-            club.addEvent(event);
+        if (clubRepo.existsById(club.getId())) {
             event.setClub(club);
             eventRepo.save(event);
-            clubRepo.save(club);
         }
     }
 
-    @Transactional(readOnly = true)
-    public List<Event> getAllFavoriteEvents(User user){
-        List<Favorite> favorites = favoriteRepo.findAllByUserId(user.getId());
-        List<Event> favoriteEvents = new ArrayList<>();
-        for (Favorite favorite : favorites) {
-            favoriteEvents.add(favorite.getEvent());
+    @Transactional
+    public void acceptEvent(Event event){
+        Objects.requireNonNull(event);
+        if (eventRepo.existsById(event.getId()) && clubRepo.existsById(event.getClub().getId())){
+            event.setAccepted(true);
+            Club club = event.getClub();
+            club.addEvent(event);
+            eventRepo.save(event);
+            clubRepo.save(club);
         }
-        return favoriteEvents;
     }
 
     @Transactional(readOnly = true)
@@ -65,11 +62,11 @@ public class EventService {
     }
 
     @Transactional(readOnly = true)
-    public List<Event> getAllNotFinished(){
+    public List<Event> getUpcomingEvents(){
         try {
-            return eventRepo.getAllByFinishedIsFalse();
+            return eventRepo.getUpcomingEvents();
         } catch (RuntimeException e) {
-            throw new RuntimeException("There are no not finished events");
+            throw new RuntimeException("There are no upcoming events");
         }
     }
 
@@ -83,29 +80,41 @@ public class EventService {
         }
     }
 
+    @Transactional
+    public void removeClub(Event event){
+        Objects.requireNonNull(event);
+        if (eventRepo.existsById(event.getId())){
+            Club club = event.getClub();
+            club.removeEvent(event);
+            event.setClub(null);
+            clubRepo.save(club);
+            eventRepo.save(event);
+        }
+    }
+
+    @Transactional
+    public void addClub(Event event, Club club) {
+        Objects.requireNonNull(club);
+        Objects.requireNonNull(event);
+        if (exists(club.getId()) && eventRepo.existsById(event.getId())) {
+            club.addEvent(event);
+            event.setClub(club);
+            clubRepo.save(club);
+            eventRepo.save(event);
+        }
+    }
+
     @Transactional(readOnly = true)
     public Event find(Integer id){
         Objects.requireNonNull(id);
         return eventRepo.findById(id).orElse(null);
     }
-
     @Transactional(readOnly = true)
     public Iterable<Event> findAll(){
         try {
             return eventRepo.findAll();
         } catch (RuntimeException e) {
             throw new RuntimeException("There are no events");
-        }
-    }
-    @Transactional
-    public void save(Event event, Club club){
-        Objects.requireNonNull(event);
-        Objects.requireNonNull(club);
-        if (clubRepo.existsById(club.getId())) {
-            event.setClub(club);
-            club.addEvent(event);
-            clubRepo.save(club);
-            eventRepo.save(event);
         }
     }
 

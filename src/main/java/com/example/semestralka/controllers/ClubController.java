@@ -60,28 +60,28 @@ public class ClubController {
     }
 
     //Возможно должно быть в EventController
-    @PostMapping(value = "/{clubId}/events",consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> addEventToClub(@PathVariable Integer clubId, @RequestBody Event event){
-        Club club = clubService.find(clubId);
-        if (club==null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        eventService.acceptEvent(event,club);
-        final HttpHeaders headers = RestUtils.createLocationHeaderFromCurrentUri(
-                "/{clubId}/products", club.getId());
-        return new ResponseEntity<>(headers, HttpStatus.NO_CONTENT);
-    }
+//    @PostMapping(value = "/{clubId}/events",consumes = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<Void> addEventToClubList(@PathVariable Integer clubId, @RequestBody Event event){
+//        Club club = clubService.find(clubId);
+//        if (club==null) {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//        eventService.acceptEvent(event,club);
+//        final HttpHeaders headers = RestUtils.createLocationHeaderFromCurrentUri(
+//                "/{clubId}/products", club.getId());
+//        return new ResponseEntity<>(headers, HttpStatus.NO_CONTENT);
+//    }
 
-    @DeleteMapping(value = "/{clubId}/events/{eventId}")
-    public ResponseEntity<Void> removeEvent(@PathVariable Integer clubId, @PathVariable Integer eventId){
-        Club club = clubService.find(clubId);
-        Event event = eventService.find(eventId);
-        if (club==null || event==null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        clubService.removeEvent(club, event);
-        final HttpHeaders headers = RestUtils.createLocationHeaderFromCurrentUri(
-                "/{id}/events", club.getId());
-        return new ResponseEntity<>(headers, HttpStatus.NO_CONTENT);
-    }
+//    @DeleteMapping(value = "/{clubId}/events/{eventId}")
+//    public ResponseEntity<Void> removeEventFromClubList(@PathVariable Integer clubId, @PathVariable Integer eventId){
+//        Club club = clubService.find(clubId);
+//        Event event = eventService.find(eventId);
+//        if (club==null || event==null) {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//        clubService.removeEventFromClubList(club, event);
+//        final HttpHeaders headers = RestUtils.createLocationHeaderFromCurrentUri(
+//                "/{id}/events", club.getId());
+//        return new ResponseEntity<>(headers, HttpStatus.NO_CONTENT);
+//    }
 }
