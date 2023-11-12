@@ -2,9 +2,8 @@ package com.example.semestralka.model;
 
 import lombok.Data;
 
-@Data
 public enum Role {
-    ADMIN("ROLE_ADMIN"), USER("ROLE_USER"), GUEST("ROLE_GUEST");
+    ADMIN("ROLE_ADMIN"), USER("ROLE_USER");
 
     private final String name;
 

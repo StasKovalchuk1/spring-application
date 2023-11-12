@@ -8,6 +8,7 @@ import java.util.List;
 
 @Entity
 @Data
+@Table(name = "usersadd")
 public class User extends AbstractEntity {
 
     @Column(nullable = false)
