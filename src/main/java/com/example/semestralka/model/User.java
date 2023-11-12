@@ -4,9 +4,11 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.security.PublicKey;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "users")
 @Data
 public class User extends AbstractEntity {
 
@@ -33,10 +35,16 @@ public class User extends AbstractEntity {
     public List<Comment> comments;
 
     public void addComment(Comment comment){
+        if (this.comments==null){
+            this.comments = new ArrayList<>();
+        }
         this.comments.add(comment);
     }
 
     public void addFavorite(Favorite favorite){
+        if (this.favorites==null){
+            this.favorites = new ArrayList<>();
+        }
         this.favorites.add(favorite);
     }
 
