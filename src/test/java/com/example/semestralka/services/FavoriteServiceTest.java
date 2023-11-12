@@ -23,7 +23,7 @@ public class FavoriteServiceTest {
     @Autowired
     private FavoriteService favoriteService;
     @Autowired
-    private UserRepository userRepository;
+    private UserRepository userRepo;
     @Autowired
     private EventRepository eventRepo;
     @Autowired
@@ -34,7 +34,7 @@ public class FavoriteServiceTest {
         Event event = Generator.generateUpcomingEvent();
         User user = Generator.generateUser();
         eventRepo.save(event);
-        userRepository.save(user);
+        userRepo.save(user);
 
         favoriteService.save(event, user);
 

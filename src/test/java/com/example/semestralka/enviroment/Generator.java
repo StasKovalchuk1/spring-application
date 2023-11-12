@@ -40,6 +40,12 @@ public class Generator {
         return user;
     }
 
+    public static Comment generateComment(){
+        final Comment comment = new Comment();
+        comment.setText("some comment text" + randomInt());
+        return comment;
+    }
+
     public static Genre generateGenre() {
         final Genre p = new Genre();
         p.setName("Genre" + randomInt());
