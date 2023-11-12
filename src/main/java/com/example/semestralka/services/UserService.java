@@ -1,6 +1,7 @@
 package com.example.semestralka.services;
 
 import com.example.semestralka.data.UserRepository;
+import com.example.semestralka.model.Comment;
 import com.example.semestralka.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,6 +51,6 @@ public class UserService {
 
     public boolean exists(Integer id){
         Objects.requireNonNull(id);
-        return  userRepository.existsById(id);
+        return userRepository.existsById(id);
     }
 }

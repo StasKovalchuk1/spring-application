@@ -29,4 +29,15 @@ public class User extends AbstractEntity {
     @OneToMany(mappedBy = "user")
     public List<Favorite> favorites;
 
+    @OneToMany(mappedBy = "user")
+    public List<Comment> comments;
+
+    public void addComment(Comment comment){
+        this.comments.add(comment);
+    }
+
+    public void addFavorite(Favorite favorite){
+        this.favorites.add(favorite);
+    }
+
 }

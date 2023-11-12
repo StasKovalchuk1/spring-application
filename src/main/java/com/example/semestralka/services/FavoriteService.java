@@ -18,12 +18,12 @@ import java.util.Objects;
 public class FavoriteService {
 
     private final FavoriteRepository favoriteRepo;
-    private final UserRepository userRepository;
+    private final UserRepository userRepo;
 
     @Autowired
-    public FavoriteService(FavoriteRepository favoriteRepo, UserRepository userRepository) {
+    public FavoriteService(FavoriteRepository favoriteRepo, UserRepository userRepo) {
         this.favoriteRepo = favoriteRepo;
-        this.userRepository = userRepository;
+        this.userRepo = userRepo;
     }
 
     @Transactional(readOnly = true)
@@ -43,19 +43,23 @@ public class FavoriteService {
 
     @Transactional(readOnly = true)
     public List<Event> getAllFavoriteEvents(User user){
-        List<Favorite> favorites = favoriteRepo.findAllByUserId(user.getId());
-        List<Event> favoriteEvents = new ArrayList<>();
-        for (Favorite favorite : favorites) {
-            favoriteEvents.add(favorite.getEvent());
+        try {
+            List<Favorite> favorites = favoriteRepo.findAllByUserId(user.getId());
+            List<Event> favoriteEvents = new ArrayList<>();
+            for (Favorite favorite : favorites) {
+                favoriteEvents.add(favorite.getEvent());
+            }
+            return favoriteEvents;
+        } catch (RuntimeException e) {
+            throw new RuntimeException("There are no favorite events");
         }
-        return favoriteEvents;
     }
 
     @Transactional
     public void save(Event event, User user){
         Objects.requireNonNull(event);
         Objects.requireNonNull(user);
-        if (userRepository.existsById(user.getId())) {
+        if (userRepo.existsById(user.getId())) {
             final Favorite f = new Favorite();
             final FavoriteId favoriteId = new FavoriteId();
             favoriteId.setUserId(user.getId());
