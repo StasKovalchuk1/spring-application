@@ -1,6 +1,7 @@
 package com.example.semestralka.services;
 
 import com.example.semestralka.data.GenreRepository;
+import com.example.semestralka.exceptions.NotFoundException;
 import com.example.semestralka.model.Genre;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,8 +28,8 @@ public class GenreService {
     public Iterable<Genre> findAll(){
         try {
             return genreRepo.findAll();
-        } catch (RuntimeException e) {
-            throw new RuntimeException("There are no genres");
+        } catch (Exception e) {
+            throw new NotFoundException("There are no genres");
         }
     }
     @Transactional

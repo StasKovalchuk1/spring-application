@@ -3,6 +3,7 @@ package com.example.semestralka.services;
 import com.example.semestralka.data.ClubRepository;
 import com.example.semestralka.data.EventRepository;
 import com.example.semestralka.data.FavoriteRepository;
+import com.example.semestralka.exceptions.NotFoundException;
 import com.example.semestralka.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,7 +58,7 @@ public class EventService {
         try {
             return eventRepo.getAllByClub(club);
         } catch (RuntimeException e) {
-            throw new RuntimeException("There are no events in this club");
+            throw new NotFoundException("There are no events in this club");
         }
     }
 
@@ -66,7 +67,7 @@ public class EventService {
         try {
             return eventRepo.getUpcomingEvents();
         } catch (RuntimeException e) {
-            throw new RuntimeException("There are no upcoming events");
+            throw new NotFoundException("There are no upcoming events");
         }
     }
 
@@ -76,7 +77,7 @@ public class EventService {
         try {
             return eventRepo.getUpcomingEventsByGenres(genres);
         } catch (RuntimeException e) {
-            throw new RuntimeException("There are no upcoming events by this genre");
+            throw new NotFoundException("There are no upcoming events by this genre");
         }
     }
 
@@ -114,7 +115,7 @@ public class EventService {
         try {
             return eventRepo.findAll();
         } catch (RuntimeException e) {
-            throw new RuntimeException("There are no events");
+            throw new NotFoundException("There are no events");
         }
     }
 

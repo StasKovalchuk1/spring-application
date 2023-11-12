@@ -2,6 +2,7 @@ package com.example.semestralka.services;
 
 import com.example.semestralka.data.FavoriteRepository;
 import com.example.semestralka.data.UserRepository;
+import com.example.semestralka.exceptions.NotFoundException;
 import com.example.semestralka.model.Event;
 import com.example.semestralka.model.Favorite;
 import com.example.semestralka.model.FavoriteId;
@@ -36,8 +37,8 @@ public class FavoriteService {
     public Iterable<Favorite> findAll(){
         try {
             return favoriteRepo.findAll();
-        } catch (RuntimeException e) {
-            throw new RuntimeException("There are no favorite events");
+        } catch (Exception e) {
+            throw new NotFoundException("There are no favorite events");
         }
     }
 
@@ -50,8 +51,8 @@ public class FavoriteService {
                 favoriteEvents.add(favorite.getEvent());
             }
             return favoriteEvents;
-        } catch (RuntimeException e) {
-            throw new RuntimeException("There are no favorite events");
+        } catch (Exception e) {
+            throw new NotFoundException("There are no favorite events");
         }
     }
 

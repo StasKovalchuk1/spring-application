@@ -1,6 +1,7 @@
 package com.example.semestralka.services;
 
 import com.example.semestralka.data.UserRepository;
+import com.example.semestralka.exceptions.NotFoundException;
 import com.example.semestralka.model.Comment;
 import com.example.semestralka.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +24,8 @@ public class UserService {
     public Iterable<User> findAll(){
         try {
             return userRepository.findAll();
-        } catch (RuntimeException e) {
-            throw new RuntimeException("There are no users");
+        } catch (Exception e) {
+            throw new NotFoundException("There are no users");
         }
     }
     @Transactional
