@@ -1,7 +1,5 @@
 package com.example.semestralka.services;
 
-import com.example.semestralka.data.ClubRepository;
-import com.example.semestralka.data.EventRepository;
 import com.example.semestralka.enviroment.Generator;
 import com.example.semestralka.model.Club;
 import com.example.semestralka.model.Event;

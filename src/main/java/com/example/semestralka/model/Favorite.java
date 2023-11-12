@@ -3,8 +3,6 @@ package com.example.semestralka.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.List;
-
 @Entity
 @Data
 public class Favorite{

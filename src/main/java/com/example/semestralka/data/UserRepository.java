@@ -1,11 +1,11 @@
 package com.example.semestralka.data;
 
-import com.example.semestralka.model.Person;
+import com.example.semestralka.model.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PersonRepository extends CrudRepository<Person, Integer> {
+public interface UserRepository extends CrudRepository<User, Integer> {
 
-    Person getByUsername(String username);
+    User getByUsername(String username);
 }

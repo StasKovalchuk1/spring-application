@@ -1,7 +1,7 @@
 package com.example.semestralka.services;
 
 import com.example.semestralka.data.FavoriteRepository;
-import com.example.semestralka.data.PersonRepository;
+import com.example.semestralka.data.UserRepository;
 import com.example.semestralka.model.Event;
 import com.example.semestralka.model.Favorite;
 import com.example.semestralka.model.FavoriteId;
@@ -18,12 +18,12 @@ import java.util.Objects;
 public class FavoriteService {
 
     private final FavoriteRepository favoriteRepo;
-    private final PersonRepository personRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public FavoriteService(FavoriteRepository favoriteRepo, PersonRepository personRepository) {
+    public FavoriteService(FavoriteRepository favoriteRepo, UserRepository userRepository) {
         this.favoriteRepo = favoriteRepo;
-        this.personRepository = personRepository;
+        this.userRepository = userRepository;
     }
 
     @Transactional(readOnly = true)
@@ -55,7 +55,7 @@ public class FavoriteService {
     public void save(Event event, User user){
         Objects.requireNonNull(event);
         Objects.requireNonNull(user);
-        if (personRepository.existsById(user.getId())) {
+        if (userRepository.existsById(user.getId())) {
             final Favorite f = new Favorite();
             final FavoriteId favoriteId = new FavoriteId();
             favoriteId.setUserId(user.getId());

@@ -27,7 +27,7 @@ public class FavoriteRepositoryTest {
     public FavoriteRepository favoriteRepository;
 
     @Autowired
-    public PersonRepository personRepository;
+    public UserRepository userRepository;
 
     @Autowired
     public EventRepository eventRepository;
@@ -39,7 +39,7 @@ public class FavoriteRepositoryTest {
         Event event2 = generateUpcomingEvent();
         Event event3 = generateUpcomingEvent();
 
-        personRepository.save(user);
+        userRepository.save(user);
         eventRepository.save(event1);
         eventRepository.save(event2);
         eventRepository.save(event3);

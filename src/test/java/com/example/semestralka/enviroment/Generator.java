@@ -36,6 +36,7 @@ public class Generator {
         user.setUsername("username" + randomInt());
         user.setEmail("email" + randomInt());
         user.setPhoneNumber("number" + randomInt());
+        user.setPassword("password " + randomInt());
         return user;
     }
 
