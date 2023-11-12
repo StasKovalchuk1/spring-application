@@ -1,9 +1,11 @@
 package com.example.semestralka.services;
 
 import com.example.semestralka.data.UserRepository;
+import com.example.semestralka.exceptions.NotFoundException;
 import com.example.semestralka.model.Comment;
 import com.example.semestralka.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,10 +25,11 @@ public class UserService {
     public Iterable<User> findAll(){
         try {
             return userRepository.findAll();
-        } catch (RuntimeException e) {
-            throw new RuntimeException("There are no users");
+        } catch (DataAccessException e) {
+            throw new NotFoundException("There are no users");
         }
     }
+
     @Transactional
     public void save(User user){
         Objects.requireNonNull(user);

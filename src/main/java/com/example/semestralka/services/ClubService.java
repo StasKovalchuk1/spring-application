@@ -33,6 +33,7 @@ public class ClubService {
             throw new NotFoundException("There are no clubs");
         }
     }
+
     @Transactional
     public void save(Club club){
         Objects.requireNonNull(club);

@@ -33,12 +33,21 @@ public class Event extends AbstractEntity{
     @JoinTable(name = "event_genre")
     private List<Genre> genres;
 
+    @OneToMany(mappedBy = "event")
+    private List<Comment> comments;
+
     @ManyToOne
     @JoinColumn(name = "club_id")
     public Club club;
 
     public void addGenre(Genre genre) {
-        if (genres == null) {genres = new ArrayList<>();}
+        if (genres == null) genres = new ArrayList<>();
         genres.add(genre);
     }
-}
+
+    public void addComment(Comment comment) {
+        if (comments == null) comments = new ArrayList<>();
+        comments.add(comment);
+    }
+
+ }

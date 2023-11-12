@@ -2,11 +2,13 @@ package com.example.semestralka.services;
 
 import com.example.semestralka.data.FavoriteRepository;
 import com.example.semestralka.data.UserRepository;
+import com.example.semestralka.exceptions.NotFoundException;
 import com.example.semestralka.model.Event;
 import com.example.semestralka.model.Favorite;
 import com.example.semestralka.model.FavoriteId;
 import com.example.semestralka.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,8 +38,8 @@ public class FavoriteService {
     public Iterable<Favorite> findAll(){
         try {
             return favoriteRepo.findAll();
-        } catch (RuntimeException e) {
-            throw new RuntimeException("There are no favorite events");
+        } catch (DataAccessException e) {
+            throw new NotFoundException("There are no favorite events");
         }
     }
 
@@ -50,8 +52,8 @@ public class FavoriteService {
                 favoriteEvents.add(favorite.getEvent());
             }
             return favoriteEvents;
-        } catch (RuntimeException e) {
-            throw new RuntimeException("There are no favorite events");
+        } catch (DataAccessException e) {
+            throw new NotFoundException("There are no favorite events");
         }
     }
 

@@ -3,8 +3,10 @@ package com.example.semestralka.services;
 import com.example.semestralka.data.ClubRepository;
 import com.example.semestralka.data.EventRepository;
 import com.example.semestralka.data.FavoriteRepository;
+import com.example.semestralka.exceptions.NotFoundException;
 import com.example.semestralka.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,8 +58,8 @@ public class EventService {
         Objects.requireNonNull(club);
         try {
             return eventRepo.getAllByClub(club);
-        } catch (RuntimeException e) {
-            throw new RuntimeException("There are no events in this club");
+        } catch (DataAccessException e) {
+            throw new NotFoundException("There are no events in this club");
         }
     }
 
@@ -65,8 +67,8 @@ public class EventService {
     public List<Event> getUpcomingEvents(){
         try {
             return eventRepo.getUpcomingEvents();
-        } catch (RuntimeException e) {
-            throw new RuntimeException("There are no upcoming events");
+        } catch (DataAccessException e) {
+            throw new NotFoundException("There are no upcoming events");
         }
     }
 
@@ -75,8 +77,8 @@ public class EventService {
         Objects.requireNonNull(genres);
         try {
             return eventRepo.getUpcomingEventsByGenres(genres);
-        } catch (RuntimeException e) {
-            throw new RuntimeException("There are no upcoming events by this genre");
+        } catch (DataAccessException e) {
+            throw new NotFoundException("There are no upcoming events by this genre");
         }
     }
 
@@ -113,8 +115,8 @@ public class EventService {
     public Iterable<Event> findAll(){
         try {
             return eventRepo.findAll();
-        } catch (RuntimeException e) {
-            throw new RuntimeException("There are no events");
+        } catch (DataAccessException e) {
+            throw new NotFoundException("There are no events");
         }
     }
 
