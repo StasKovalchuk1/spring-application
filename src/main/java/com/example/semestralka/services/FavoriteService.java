@@ -43,20 +43,6 @@ public class FavoriteService {
         }
     }
 
-    @Transactional(readOnly = true)
-    public List<Event> getAllFavoriteEvents(User user){
-        try {
-            List<Favorite> favorites = favoriteRepo.findAllByUserId(user.getId());
-            List<Event> favoriteEvents = new ArrayList<>();
-            for (Favorite favorite : favorites) {
-                favoriteEvents.add(favorite.getEvent());
-            }
-            return favoriteEvents;
-        } catch (DataAccessException e) {
-            throw new NotFoundException("There are no favorite events");
-        }
-    }
-
     @Transactional
     public void save(Event event, User user){
         Objects.requireNonNull(event);

@@ -11,6 +11,4 @@ import java.util.List;
 public interface FavoriteRepository extends CrudRepository<Favorite, FavoriteId> {
 
     List<Favorite> findAllByUserId(Integer user_id);
-
-    Favorite findByUserAndEvent(User user, Event event);
 }
