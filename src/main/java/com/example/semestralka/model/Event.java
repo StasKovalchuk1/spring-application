@@ -33,7 +33,7 @@ public class Event extends AbstractEntity{
     @JoinTable(name = "event_genre")
     private List<Genre> genres;
 
-    @OneToMany(mappedBy = "event")
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
     private List<Comment> comments;
 
     @ManyToOne

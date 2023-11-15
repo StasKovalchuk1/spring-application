@@ -28,11 +28,11 @@ public class User extends AbstractEntity {
     @Column(name = "role")
     private Role role;
 
-    @OneToMany(mappedBy = "user")
-    public List<Favorite> favorites;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Favorite> favorites;
 
-    @OneToMany(mappedBy = "user")
-    public List<Comment> comments;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Comment> comments;
 
     public void addComment(Comment comment){
         if (this.comments==null){
