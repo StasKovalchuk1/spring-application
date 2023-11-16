@@ -10,7 +10,7 @@ public class Favorite{
     @EmbeddedId
     private FavoriteId id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @MapsId("userId")
     public User user;

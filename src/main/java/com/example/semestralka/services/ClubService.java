@@ -1,8 +1,10 @@
 package com.example.semestralka.services;
 
 import com.example.semestralka.data.ClubRepository;
+import com.example.semestralka.data.EventRepository;
 import com.example.semestralka.exceptions.NotFoundException;
 import com.example.semestralka.model.Club;
+import com.example.semestralka.model.Event;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -13,10 +15,12 @@ import java.util.Objects;
 public class ClubService {
 
     private final ClubRepository clubRepo;
+    private final EventRepository eventRepo;
 
     @Autowired
-    public ClubService(ClubRepository clubRepo) {
+    public ClubService(ClubRepository clubRepo, EventRepository eventRepo) {
         this.clubRepo = clubRepo;
+        this.eventRepo = eventRepo;
     }
 
     @Transactional(readOnly = true)
@@ -52,6 +56,11 @@ public class ClubService {
     public void delete(Club club){
         Objects.requireNonNull(club);
         if (exists(club.getId())) {
+            for (Event e : club.getEvents()){
+                e.setClub(null);
+                e.setAccepted(false);
+                eventRepo.save(e);
+            }
             clubRepo.delete(club);
         }
     }

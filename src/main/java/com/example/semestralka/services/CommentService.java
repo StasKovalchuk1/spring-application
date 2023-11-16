@@ -75,17 +75,58 @@ public class CommentService {
 
     public boolean exists(Integer id){
         Objects.requireNonNull(id);
-        return  commentRepo.existsById(id);
+        return commentRepo.existsById(id);
     }
 
     @Transactional(readOnly = true)
     public List<Comment> getAllByUser(User user){
-        List<Comment> comments = user.getComments();
-        if (comments.isEmpty()){
-            throw new NotFoundException("There are no comments");
+        if (userRepo.existsById(user.getId())){
+            List<Comment> comments = user.getComments();
+            if (comments.isEmpty()){
+                throw new NotFoundException("There are no comments");
+            }
+            return comments;
         }
-        return comments;
+        throw new NotFoundException("User does not exist");
     }
 
+    @Transactional(readOnly = true)
+    public List<Comment> getAllByEvent(Event event){
+        Objects.requireNonNull(event);
+        if (eventRepo.existsById(event.getId())){
+            List<Comment> comments = event.getComments();
+            if (comments.isEmpty()){
+                throw new NotFoundException("There are no comments");
+            }
+            return comments;
+        }
+        throw new NotFoundException("Event does not exist");
+    }
 
+    @Transactional(readOnly = true)
+    public List<Comment> getAllByEventFromFirst(Event event){
+        Objects.requireNonNull(event);
+        if (eventRepo.existsById(event.getId())){
+            List<Comment> comments = commentRepo.getAllByEventFromFirst(event);
+            if (comments.isEmpty()){
+                throw new NotFoundException("There are no comments");
+            }
+            return comments;
+        }
+        throw new NotFoundException("Event does not exist");
+
+    }
+
+    @Transactional(readOnly = true)
+    public List<Comment> getAllByEventFromLast(Event event){
+        Objects.requireNonNull(event);
+        if (eventRepo.existsById(event.getId())){
+            List<Comment> comments = commentRepo.getAllByEventFromLast(event);
+            if (comments.isEmpty()){
+                throw new NotFoundException("There are no comments");
+            }
+            return comments;
+        }
+        throw new NotFoundException("Event does not exist");
+    }
 }
