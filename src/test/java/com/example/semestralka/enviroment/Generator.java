@@ -60,6 +60,7 @@ public class Generator {
         LocalDateTime currentDate = LocalDateTime.now();
         LocalDateTime eventDate = currentDate.plus(1, ChronoUnit.DAYS);
         e.setEventDate(eventDate);
+        e.setAccepted(true);
         return e;
     }
 
@@ -71,6 +72,7 @@ public class Generator {
         LocalDateTime currentDate = LocalDateTime.now();
         LocalDateTime eventDate = currentDate.minus(1, ChronoUnit.DAYS);
         e.setEventDate(eventDate);
+        e.setAccepted(true);
         return e;
     }
 

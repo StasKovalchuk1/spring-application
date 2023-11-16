@@ -47,7 +47,7 @@ public class FavoriteService {
     public void save(Event event, User user){
         Objects.requireNonNull(event);
         Objects.requireNonNull(user);
-        if (userRepo.existsById(user.getId())) {
+        if (userRepo.existsById(user.getId()) && event.isAccepted()) {
             final Favorite f = new Favorite();
             final FavoriteId favoriteId = new FavoriteId();
             favoriteId.setUserId(user.getId());
