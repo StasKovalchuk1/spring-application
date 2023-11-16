@@ -69,6 +69,8 @@ public class CommentService {
     public void delete(Comment comment){
         Objects.requireNonNull(comment);
         if (exists(comment.getId())) {
+            comment.removeFromEvent();
+            comment.removeFromUser();
             commentRepo.delete(comment);
         }
     }
