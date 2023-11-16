@@ -1,6 +1,7 @@
 package com.example.semestralka.services;
 
 
+import com.example.semestralka.data.CommentRepository;
 import com.example.semestralka.data.EventRepository;
 import com.example.semestralka.data.UserRepository;
 import com.example.semestralka.enviroment.Generator;
@@ -15,8 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -28,6 +28,8 @@ public class CommentServiceTest {
     private UserRepository userRepo;
     @Autowired
     private EventRepository eventRepo;
+    @Autowired
+    private CommentRepository commentRepo;
 
     private User user;
     private Comment comment;
@@ -40,29 +42,46 @@ public class CommentServiceTest {
         comment = Generator.generateComment();
         userRepo.save(user);
         eventRepo.save(event);
-        commentService.save(comment, user, event);
     }
 
     @Test
+    public void deleteRemovesCommentFromEventAndUser(){
+        commentService.save(comment, user, event);
+        assertTrue(user.getComments().contains(comment));
+        assertTrue(event.getComments().contains(comment));
+
+        commentService.delete(comment);
+
+        assertFalse(user.getComments().contains(comment));
+        assertFalse(event.getComments().contains(comment));
+    }
+
+
+
+    @Test
     public void saveSetsUserToComment(){
+        commentService.save(comment, user, event);
         User resUser = comment.getUser();
         assertEquals(resUser, user);
     }
 
     @Test
     public void saveSetsEventToComment(){
+        commentService.save(comment, user, event);
         Event resEvent = comment.getEvent();
         assertEquals(resEvent, event);
     }
 
     @Test
     public void saveAddsCommentToUser(){
+        commentService.save(comment, user, event);
         List<Comment> userComments = user.getComments();
         assertTrue(userComments.contains(comment));
     }
 
     @Test
     public void saveAddsCommentToEvent(){
+        commentService.save(comment, user, event);
         List<Comment> eventComments = event.getComments();
         assertTrue(eventComments.contains(comment));
     }

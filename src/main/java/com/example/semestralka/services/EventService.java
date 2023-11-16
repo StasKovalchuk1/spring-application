@@ -132,6 +132,7 @@ public class EventService {
     public void delete(Event event){
         Objects.requireNonNull(event);
         if (exists(event.getId())) {
+            event.removeFromClub();
             eventRepo.delete(event);
         }
     }
