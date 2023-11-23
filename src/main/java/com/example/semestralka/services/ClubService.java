@@ -56,7 +56,7 @@ public class ClubService {
     public void delete(Club club){
         Objects.requireNonNull(club);
         if (exists(club.getId())) {
-            for (Event e : club.getEvents()){
+            for (Event e : eventRepo.getAllUpcomingByClub(club)){
                 e.setClub(null);
                 e.setAccepted(false);
                 eventRepo.save(e);

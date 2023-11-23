@@ -27,11 +27,12 @@ public class EventService {
     }
 
     @Transactional
-    public void save(Event event, Club club){
+    public void submitEventByUser(Event event, Club club){
         Objects.requireNonNull(event);
         Objects.requireNonNull(club);
         if (clubRepo.existsById(club.getId())) {
             event.setClub(club);
+            event.setAccepted(false);
             eventRepo.save(event);
         }
     }
@@ -45,6 +46,30 @@ public class EventService {
             club.addEvent(event);
             eventRepo.save(event);
             clubRepo.save(club);
+        }
+    }
+
+    @Transactional
+    public void addClub(Event event, Club club) {
+        Objects.requireNonNull(club);
+        Objects.requireNonNull(event);
+        if (exists(club.getId()) && eventRepo.existsById(event.getId())) {
+            club.addEvent(event);
+            event.setClub(club);
+            clubRepo.save(club);
+            eventRepo.save(event);
+        }
+    }
+
+    @Transactional
+    public void removeClub(Event event){
+        Objects.requireNonNull(event);
+        if (eventRepo.existsById(event.getId())){
+            Club club = event.getClub();
+            club.removeEvent(event);
+            event.setClub(null);
+            clubRepo.save(club);
+            eventRepo.save(event);
         }
     }
 
@@ -82,30 +107,6 @@ public class EventService {
         }
     }
 
-    @Transactional
-    public void removeClub(Event event){
-        Objects.requireNonNull(event);
-        if (eventRepo.existsById(event.getId())){
-            Club club = event.getClub();
-            club.removeEvent(event);
-            event.setClub(null);
-            clubRepo.save(club);
-            eventRepo.save(event);
-        }
-    }
-
-    @Transactional
-    public void addClub(Event event, Club club) {
-        Objects.requireNonNull(club);
-        Objects.requireNonNull(event);
-        if (exists(club.getId()) && eventRepo.existsById(event.getId())) {
-            club.addEvent(event);
-            event.setClub(club);
-            clubRepo.save(club);
-            eventRepo.save(event);
-        }
-    }
-
     @Transactional(readOnly = true)
     public Event find(Integer id){
         Objects.requireNonNull(id);
@@ -132,7 +133,6 @@ public class EventService {
     public void delete(Event event){
         Objects.requireNonNull(event);
         if (exists(event.getId())) {
-            event.removeFromClub();
             eventRepo.delete(event);
         }
     }

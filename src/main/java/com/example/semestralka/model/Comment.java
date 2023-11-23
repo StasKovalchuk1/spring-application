@@ -24,12 +24,12 @@ public class Comment extends AbstractEntity{
     private Event event;
 
     public void removeFromUser(){
-        this.user.removeComment(this);
-        this.user=null;
+        user.removeComment(this);
+        user=null;
     }
 
     public void removeFromEvent(){
-        this.event.removeComment(this);
-        this.event=null;
+        event.removeComment(this);
+        event=null;
     }
 }

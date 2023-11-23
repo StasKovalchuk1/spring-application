@@ -43,7 +43,7 @@ public class ClubController {
         return result;
     }
 
-    @GetMapping(value = "{clubId}/events")
+    @GetMapping(value = "/{clubId}/events")
     public List<Event> getEventsByClub(@PathVariable Integer clubId){
         Club club = clubService.find(clubId);
         if (club==null){
@@ -57,6 +57,11 @@ public class ClubController {
         clubService.save(club);
         final HttpHeaders headers = RestUtils.createLocationHeaderFromCurrentUri("/{id}", club.getId());
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void removeClub(@RequestBody Club club) {
+        clubService.delete(club);
     }
 
     //Возможно должно быть в EventController

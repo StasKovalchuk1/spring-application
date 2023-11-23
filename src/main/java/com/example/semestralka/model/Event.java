@@ -41,22 +41,16 @@ public class Event extends AbstractEntity{
     public Club club;
 
     public void addGenre(Genre genre) {
-        if (this.genres == null) this.genres = new ArrayList<>();
-        this.genres.add(genre);
+        if (genres == null) genres = new ArrayList<>();
+        genres.add(genre);
     }
 
     public void addComment(Comment comment) {
         if (comments == null) comments = new ArrayList<>();
-        this.comments.add(comment);
+        comments.add(comment);
     }
 
     public void removeComment(Comment comment){
-        this.comments.remove(comment);
-    }
-    public void removeFromClub() {
-        if (this.club != null) {
-            this.club.removeEvent(this);
-            this.club = null;
-        }
+        comments.remove(comment);
     }
  }
