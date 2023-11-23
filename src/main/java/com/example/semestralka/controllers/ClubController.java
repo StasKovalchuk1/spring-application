@@ -11,12 +11,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("rest/clubs")
+@PreAuthorize("permitAll()")
 public class ClubController {
 
     private final ClubService clubService;
@@ -52,6 +54,7 @@ public class ClubController {
         return eventService.getAllByClub(club);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> createClub(@RequestBody Club club){
         clubService.save(club);
@@ -59,6 +62,7 @@ public class ClubController {
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public void removeClub(@RequestBody Club club) {
         clubService.delete(club);
