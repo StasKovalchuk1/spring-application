@@ -15,6 +15,9 @@ public interface EventRepository  extends CrudRepository<Event, Integer> {
 
     List<Event> getAllByAcceptedIsFalse();
 
+    @Query("SELECT e FROM Event e JOIN e.genres g WHERE :genre MEMBER OF e.genres")
+    List<Event> getAllByGenre(Genre genre);
+
     @Query("select distinct e from Event e where e.eventDate > CURRENT_TIMESTAMP and e.accepted=true")
     List<Event> getAllUpcomingEvents();
 

@@ -95,6 +95,15 @@ public class EventService {
         }
     }
 
+    @Transactional(readOnly = true)
+    public Iterable<Event> getAllByGenre(Genre genre){
+        try {
+            return eventRepo.getAllByGenre(genre);
+        } catch (DataAccessException e) {
+            throw new NotFoundException("There are no events");
+        }
+    }
+
     @Transactional
     public void update(Event event){
         Objects.requireNonNull(event);
