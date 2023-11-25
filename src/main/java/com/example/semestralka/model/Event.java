@@ -53,4 +53,6 @@ public class Event extends AbstractEntity{
     public void removeComment(Comment comment){
         comments.remove(comment);
     }
+
+    public void removeGenre(Genre genre){genres.remove(genre);}
  }

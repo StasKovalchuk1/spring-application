@@ -38,7 +38,7 @@ public class EventController {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/accept",consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> acceptEvent(@RequestBody Event event){
         eventService.acceptEvent(event);
         final HttpHeaders headers = RestUtils.createLocationHeaderFromCurrentUri("/{id}", event.getId());
@@ -62,7 +62,7 @@ public class EventController {
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> createEventByUser(@RequestBody Event event, @RequestBody Club club){
         eventService.createEventByUser(event, club);
         final HttpHeaders headers = RestUtils.createLocationHeaderFromCurrentUri("/{id}", event.getId());
