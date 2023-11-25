@@ -7,6 +7,8 @@ import com.example.semestralka.exceptions.NotFoundException;
 import com.example.semestralka.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,6 +51,8 @@ public class CommentService {
     }
 
     @Transactional(readOnly = true)
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+    @PostFilter("filterObject.user.username == principal.username")
     public Iterable<Comment> findAll(){
         try {
             return commentRepo.findAll();

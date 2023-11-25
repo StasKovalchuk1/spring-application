@@ -9,6 +9,8 @@ import com.example.semestralka.model.FavoriteId;
 import com.example.semestralka.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +37,8 @@ public class FavoriteService {
     }
 
     @Transactional(readOnly = true)
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @PostFilter("filterObject.user.username == principal.username")
     public Iterable<Favorite> findAll(){
         try {
             return favoriteRepo.findAll();

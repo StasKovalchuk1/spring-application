@@ -61,7 +61,7 @@ public class CommentController {
     }
 
     @PostMapping(value = "/{eventId}/comments", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> addComment(Authentication auth,
                                            @RequestBody Comment comment,
                                            @PathVariable Integer eventId){
