@@ -22,14 +22,4 @@ public class Comment extends AbstractEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id", nullable = false)
     private Event event;
-
-    public void removeFromUser(){
-        user.removeComment(this);
-        user=null;
-    }
-
-    public void removeFromEvent(){
-        event.removeComment(this);
-        event=null;
-    }
 }
