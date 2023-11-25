@@ -1,9 +1,5 @@
 package com.example.semestralka.services;
 
-import com.example.semestralka.data.EventRepository;
-import com.example.semestralka.data.FavoriteRepository;
-import com.example.semestralka.data.UserRepository;
-import com.example.semestralka.enviroment.Generator;
 import com.example.semestralka.model.Club;
 import com.example.semestralka.model.Event;
 import com.example.semestralka.model.User;
@@ -55,9 +51,9 @@ public class UserServiceTest {
 
         clubService.save(club);
 
-        eventService.save(event1, club);
-        eventService.save(event2, club);
-        eventService.save(event3, club);
+        eventService.createEventByUser(event1, club);
+        eventService.createEventByUser(event2, club);
+        eventService.createEventByUser(event3, club);
 
         favoriteService.save(event1, user1);
         favoriteService.save(event2, user1);

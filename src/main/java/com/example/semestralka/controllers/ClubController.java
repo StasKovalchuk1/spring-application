@@ -46,12 +46,12 @@ public class ClubController {
     }
 
     @GetMapping(value = "/{clubId}/events")
-    public List<Event> getEventsByClub(@PathVariable Integer clubId){
+    public List<Event> getAllUpcomingEventsByClub(@PathVariable Integer clubId){
         Club club = clubService.find(clubId);
         if (club==null){
             throw NotFoundException.create("Club", clubId);
         }
-        return eventService.getAllByClub(club);
+        return eventService.getAllUpcomingByClub(club);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -68,14 +68,13 @@ public class ClubController {
         clubService.delete(club);
     }
 
-    //Возможно должно быть в EventController
 //    @PostMapping(value = "/{clubId}/events",consumes = MediaType.APPLICATION_JSON_VALUE)
 //    public ResponseEntity<Void> addEventToClubList(@PathVariable Integer clubId, @RequestBody Event event){
 //        Club club = clubService.find(clubId);
 //        if (club==null) {
 //            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 //        }
-//        eventService.acceptEvent(event,club);
+//        eventService.acceptEvent(event);
 //        final HttpHeaders headers = RestUtils.createLocationHeaderFromCurrentUri(
 //                "/{clubId}/products", club.getId());
 //        return new ResponseEntity<>(headers, HttpStatus.NO_CONTENT);

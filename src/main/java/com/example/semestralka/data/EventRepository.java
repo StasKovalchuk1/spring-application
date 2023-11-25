@@ -16,10 +16,10 @@ public interface EventRepository  extends CrudRepository<Event, Integer> {
     List<Event> getAllByAcceptedIsFalse();
 
     @Query("select distinct e from Event e where e.eventDate > CURRENT_TIMESTAMP and e.accepted=true")
-    List<Event> getUpcomingEvents();
+    List<Event> getAllUpcomingEvents();
 
     @Query("select distinct e from Event e join e.genres g where e.eventDate > CURRENT_TIMESTAMP and g in :genres and e.accepted=true")
-    List<Event> getUpcomingEventsByGenres(@Param("genres")List<Genre> genres);
+    List<Event> getAllUpcomingEventsByGenres(@Param("genres")List<Genre> genres);
 
     @Query("select distinct e from Event e where e.club = :club and e.accepted=true")
     List<Event> getAllByClub(Club club);

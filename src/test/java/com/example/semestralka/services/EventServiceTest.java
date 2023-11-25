@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -44,7 +43,7 @@ public class EventServiceTest {
         user = Generator.generateUser();
         userRepo.save(user);
         clubRepo.save(club);
-        eventService.save(event, club);
+        eventService.createEventByUser(event, club);
     }
 
     @Test

@@ -65,7 +65,7 @@ public class EventRepositoryTest {
         eventRepository.save(event2);
 
         //test with 1 upcoming event
-        List<Event> eventsByGenres = eventRepository.getUpcomingEventsByGenres(genres);
+        List<Event> eventsByGenres = eventRepository.getAllUpcomingEventsByGenres(genres);
         assertEquals(eventsByGenres.size(), 1);
         assertEquals(eventsByGenres.get(0).getId(), event1.getId());
 
@@ -73,7 +73,7 @@ public class EventRepositoryTest {
         event2.addGenre(genre2);
         eventRepository.save(event2);
 
-        eventsByGenres = eventRepository.getUpcomingEventsByGenres(genres);
+        eventsByGenres = eventRepository.getAllUpcomingEventsByGenres(genres);
         assertEquals(eventsByGenres.size(), 2);
         assertEquals(eventsByGenres.get(0).getId(), event1.getId());
         assertEquals(eventsByGenres.get(1).getId(), event2.getId());
