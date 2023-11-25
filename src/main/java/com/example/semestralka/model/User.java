@@ -35,25 +35,21 @@ public class User extends AbstractEntity {
     private List<Comment> comments;
 
     public void addComment(Comment comment){
-        if (this.comments==null){
-            this.comments = new ArrayList<>();
-        }
-        this.comments.add(comment);
+        if (comments==null) comments = new ArrayList<>();
+        comments.add(comment);
     }
 
     public void removeComment(Comment comment){
-        this.comments.remove(comment);
+        comments.remove(comment);
     }
 
     public void addFavorite(Favorite favorite){
-        if (this.favorites==null){
-            this.favorites = new ArrayList<>();
-        }
-        this.favorites.add(favorite);
+        if (favorites==null) favorites = new ArrayList<>();
+        favorites.add(favorite);
     }
 
     public void removeFavorite(Favorite favorite){
-        this.favorites.remove(favorite);
+        favorites.remove(favorite);
     }
 
 }
