@@ -1,6 +1,7 @@
 package com.example.semestralka.controllers;
 
 import com.example.semestralka.controllers.util.RestUtils;
+import com.example.semestralka.exceptions.NotFoundException;
 import com.example.semestralka.model.Event;
 import com.example.semestralka.model.User;
 import com.example.semestralka.security.model.UserDetails;
@@ -43,5 +44,32 @@ public class UserController {
     public ResponseEntity<List<Event>> getFavoritesByUserId(@RequestBody User user) {
         List<Event> favorites = userService.getAllFavoriteEvents(user);
         return new ResponseEntity<>(favorites, HttpStatus.OK);
+    }
+
+    @GetMapping("/favorites/upcoming")
+    public ResponseEntity<List<Event>> getUpcomingFavoritesByUserId(@RequestBody User user) {
+        List<Event> favorites = userService.getAllFavoriteUpcomingEvents(user);
+        return new ResponseEntity<>(favorites, HttpStatus.OK);
+    }
+
+    @PostMapping("/edit")
+    public ResponseEntity<Void> updateUser(@RequestBody User user) {
+        if (userService.exists(user.getId())) {
+            userService.save(user);
+            final HttpHeaders headers = RestUtils.createLocationHeaderFromCurrentUri("/current");
+            return new ResponseEntity<>(headers, HttpStatus.OK);
+        } else {
+            throw NotFoundException.create("User", user.getId());
+        }
+    }
+
+    @DeleteMapping("/{userId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteUser(@PathVariable Integer userId) {
+        final User user = userService.find(userId);
+        if (user == null) {
+            throw NotFoundException.create("User", userId);
+        }
+        userService.delete(user);
     }
 }

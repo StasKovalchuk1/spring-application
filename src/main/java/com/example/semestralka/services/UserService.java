@@ -3,6 +3,7 @@ package com.example.semestralka.services;
 import com.example.semestralka.data.FavoriteRepository;
 import com.example.semestralka.data.UserRepository;
 import com.example.semestralka.exceptions.NotFoundException;
+import com.example.semestralka.model.Comment;
 import com.example.semestralka.model.Event;
 import com.example.semestralka.model.Favorite;
 import com.example.semestralka.model.User;
@@ -27,6 +28,12 @@ public class UserService {
     public UserService(UserRepository userRepository, FavoriteRepository favoriteRepository) {
         this.userRepository = userRepository;
         this.favoriteRepository = favoriteRepository;
+    }
+
+    @Transactional(readOnly = true)
+    public User find(Integer id){
+        Objects.requireNonNull(id);
+        return userRepository.findById(id).orElse(null);
     }
 
     @Transactional(readOnly = true)
