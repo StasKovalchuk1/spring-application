@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 @SpringBootTest
 @Transactional
-public class UserServiceTest {
+public class FavoriteServiceTest {
 
     @Autowired
     private UserService userService;
@@ -62,7 +62,7 @@ public class UserServiceTest {
 
     @Test
     public void getAllFavoriteEvents() {
-        List<Event> favoriteEvents = userService.getAllFavoriteEvents(user1);
+        List<Event> favoriteEvents = favoriteService.getAllFavoriteEvents(user1);
         List<Event> expectedEvents = Arrays.asList(event3, event2, event1);
 
         assertNotEquals(expectedEvents, favoriteEvents);
@@ -70,7 +70,7 @@ public class UserServiceTest {
 
     @Test
     public void getAllFavoriteUpcomingEvents() {
-        List<Event> favoriteEvents = userService.getAllFavoriteEvents(user1);
+        List<Event> favoriteEvents = favoriteService.getAllFavoriteEvents(user1);
         List<Event> expectedEvents = Arrays.asList(event2, event1);
 
         assertNotEquals(expectedEvents, favoriteEvents);

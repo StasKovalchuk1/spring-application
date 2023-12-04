@@ -34,6 +34,10 @@ public class User extends AbstractEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Comment> comments;
 
+    public User() {
+        this.role = Role.GUEST;
+    }
+
     public void addComment(Comment comment){
         if (comments==null) comments = new ArrayList<>();
         comments.add(comment);
@@ -52,4 +56,7 @@ public class User extends AbstractEntity {
         favorites.remove(favorite);
     }
 
+    public boolean isAdmin() {
+        return role == Role.ADMIN;
+    }
 }
