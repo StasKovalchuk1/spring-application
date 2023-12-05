@@ -67,6 +67,7 @@ public class EventServiceTest {
     @Test
     public void deleteRemovesEventFromClub(){
         club.addEvent(event);
+        clubRepo.save(club);
         assertTrue(club.getEvents().contains(event));
 
         eventService.delete(event);
