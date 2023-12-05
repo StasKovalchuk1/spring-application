@@ -57,7 +57,7 @@ public class EventServiceTest {
         event.setComments(comments);
         club.addEvent(event);
 
-        eventService.delete(event);
+        eventService.delete(event.getId());
 
         for (Comment comment : comments) {
             assertFalse(commentRepo.existsById(comment.getId()));
@@ -70,7 +70,7 @@ public class EventServiceTest {
         clubRepo.save(club);
         assertTrue(club.getEvents().contains(event));
 
-        eventService.delete(event);
+        eventService.delete(event.getId());
         assertFalse(club.getEvents().contains(event));
     }
 

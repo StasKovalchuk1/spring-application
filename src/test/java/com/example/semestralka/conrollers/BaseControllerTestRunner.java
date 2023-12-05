@@ -5,6 +5,7 @@ import com.example.semestralka.enviroment.Environment;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -22,6 +23,7 @@ public class BaseControllerTestRunner {
 
     public void setUp(Object controller) {
         this.objectMapper = Environment.getObjectMapper();
+        this.objectMapper.registerModule(new JavaTimeModule());
         // Standalone setup initializes just the specified controller, without any security or services
         // We also provide the exception handler and message converters, so that error and data handling works
         // the same as usual

@@ -4,6 +4,7 @@ import com.example.semestralka.data.ClubRepository;
 import com.example.semestralka.data.EventRepository;
 import com.example.semestralka.exceptions.NotFoundException;
 import com.example.semestralka.model.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -113,13 +114,14 @@ public class EventService {
     }
 
     @Transactional
-    public void delete(Event event){
-        Objects.requireNonNull(event);
-        if (exists(event.getId())) {
-            Club club = event.getClub();
-            club.getEvents().remove(event);
+    public void delete(Integer id){
+        Objects.requireNonNull(id);
+        if (exists(id)) {
+            Event toDelete = eventRepo.findById(id).get();
+            Club club = toDelete.getClub();
+            club.getEvents().remove(toDelete);
             clubRepo.save(club);
-            eventRepo.delete(event);
+            eventRepo.delete(toDelete);
         }
     }
 

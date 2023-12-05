@@ -87,6 +87,12 @@
 			<artifactId>h2</artifactId>
 		</dependency>
 
+		<!-- for `java.time.LocalDateTime` support	-->
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+		</dependency>
+
 	</dependencies>
 
 	<build>

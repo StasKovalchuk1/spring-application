@@ -30,6 +30,12 @@ public class GenreService {
     }
 
     @Transactional(readOnly = true)
+    public Genre findByName(String name) {
+        Objects.requireNonNull(name);
+        return genreRepo.getByName(name);
+    }
+
+    @Transactional(readOnly = true)
     public Iterable<Genre> findAll(){
         try {
             return genreRepo.findAll();

@@ -6,6 +6,7 @@ import com.example.semestralka.model.Club;
 import com.example.semestralka.model.Event;
 import com.example.semestralka.model.Genre;
 import com.example.semestralka.services.EventService;
+import com.example.semestralka.services.GenreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -23,9 +25,12 @@ public class EventController {
 
     private final EventService eventService;
 
+    private final GenreService genreService;
+
     @Autowired
-    public EventController(EventService eventService) {
+    public EventController(EventService eventService, GenreService genreService) {
         this.eventService = eventService;
+        this.genreService = genreService;
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -56,8 +61,12 @@ public class EventController {
         return eventService.getAllUpcomingEvents();
     }
 
-    @GetMapping(value = "/by_genres/{genres}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Event> getAllUpcomingByGenres(@PathVariable List<Genre> genres) {
+    @GetMapping(value = "/by_genres", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Event> getAllUpcomingByGenres(@RequestParam(name = "genres", required = false) List<String> genreNames) {
+        List<Genre> genres = new ArrayList<>();
+        for (String name : genreNames) {
+            genres.add(genreService.findByName(name));
+        }
         return eventService.getAllUpcomingByGenres(genres);
     }
 
@@ -70,8 +79,8 @@ public class EventController {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @DeleteMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void removeEvent(@RequestBody Event event){
-        eventService.delete(event);
+    @DeleteMapping(value = "/{id}")
+    public void removeEvent(@PathVariable Integer id){
+        eventService.delete(id);
     }
 }
