@@ -5,6 +5,7 @@ import com.example.semestralka.data.EventRepository;
 import com.example.semestralka.exceptions.NotFoundException;
 import com.example.semestralka.model.Club;
 import com.example.semestralka.model.Event;
+import com.example.semestralka.model.Genre;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,12 @@ public class ClubService {
     public Club find(Integer id){
         Objects.requireNonNull(id);
         return clubRepo.findById(id).orElse(null);
+    }
+
+    @Transactional(readOnly = true)
+    public Club findByName(String name) {
+        Objects.requireNonNull(name);
+        return clubRepo.getByName(name);
     }
 
     @Transactional(readOnly = true)

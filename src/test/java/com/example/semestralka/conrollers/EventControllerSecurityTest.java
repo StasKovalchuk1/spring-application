@@ -5,20 +5,19 @@ import com.example.semestralka.controllers.EventController;
 import com.example.semestralka.enviroment.Environment;
 import com.example.semestralka.enviroment.Generator;
 import com.example.semestralka.enviroment.TestConfiguration;
+import com.example.semestralka.model.Club;
 import com.example.semestralka.model.Event;
-import com.example.semestralka.model.Genre;
+import com.example.semestralka.model.Role;
 import com.example.semestralka.model.User;
+import com.example.semestralka.services.ClubService;
 import com.example.semestralka.services.EventService;
 import com.example.semestralka.services.GenreService;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.checkerframework.checker.units.qual.A;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
@@ -29,14 +28,11 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest
@@ -52,6 +48,9 @@ public class EventControllerSecurityTest extends BaseControllerTestRunner{
 
     @Autowired
     private GenreService genreService;
+
+    @Autowired
+    private ClubService clubService;
 
     private User user;
 
@@ -79,15 +78,18 @@ public class EventControllerSecurityTest extends BaseControllerTestRunner{
         @MockBean
         private GenreService genreService;
 
+        @MockBean
+        private ClubService clubService;
+
         @Bean
         public EventController eventController() {
-            return new EventController(eventService, genreService);
+            return new EventController(eventService, genreService, clubService);
         }
     }
 
     @WithAnonymousUser
     @Test
-    public void acceptEventThrowsUnauthorizedForAnonymousAccess() throws Exception{
+    public void acceptEventThrowsUnauthorizedForAnonymousAccess() throws Exception {
         final Event toAccept = Generator.generateUpcomingEvent();
         mockMvc.perform(post("/rest/events/accept").content(toJson(toAccept))
                 .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isUnauthorized());
@@ -96,7 +98,7 @@ public class EventControllerSecurityTest extends BaseControllerTestRunner{
 
     @WithMockUser
     @Test
-    public void acceptEventThrowsForbiddenForRegularUser() throws Exception{
+    public void acceptEventThrowsForbiddenForRegularUser() throws Exception {
         Environment.setCurrentUser(user);
         final Event toAccept = Generator.generateUpcomingEvent();
         mockMvc.perform(post("/rest/events/accept").content(toJson(toAccept))
@@ -104,4 +106,93 @@ public class EventControllerSecurityTest extends BaseControllerTestRunner{
         verify(eventService, never()).acceptEvent(toAccept);
     }
 
+    @WithMockUser(roles = "ADMIN")
+    @Test
+    public void acceptEventWorksWithAdmin() throws Exception {
+        user.setRole(Role.ADMIN);
+        Environment.setCurrentUser(user);
+        final Event toAccept = Generator.generateUpcomingEvent();
+        mockMvc.perform(post("/rest/events/accept").content(toJson(toAccept))
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated());
+    }
+
+    @WithAnonymousUser
+    @Test
+    public void getAllNotAcceptedThrowsUnauthorizedForAnonymousAccess() throws Exception {
+        mockMvc.perform(get("/rest/events/not_accepted")).andExpect(status().isUnauthorized());
+        verify(eventService, never()).getAllNotAccepted();
+    }
+
+    @WithMockUser
+    @Test
+    public void getAllNotAcceptedThrowsForbiddenForRegularUser() throws Exception {
+        Environment.setCurrentUser(user);
+        mockMvc.perform(get("/rest/events/not_accepted")).andExpect(status().isForbidden());
+        verify(eventService, never()).getAllNotAccepted();
+    }
+
+    @WithMockUser(roles = "ADMIN")
+    @Test
+    public void getAllNotAcceptedWorksWithAdmin() throws Exception {
+        user.setRole(Role.ADMIN);
+        Environment.setCurrentUser(user);
+        mockMvc.perform(get("/rest/events/not_accepted")).andExpect(status().isOk());
+        verify(eventService).getAllNotAccepted();
+    }
+
+    @WithAnonymousUser
+    @Test
+    public void removeEventThrowsUnauthorizedForAnonymousAccess() throws Exception {
+        final Event toRemove = Generator.generateUpcomingEvent();
+        toRemove.setId(123);
+        mockMvc.perform(delete("/rest/events/" + toRemove.getId()))
+                .andExpect(status().isUnauthorized());
+        verify(eventService, never()).delete(any());
+    }
+
+    @WithMockUser
+    @Test
+    public void removeEventThrowsForbiddenForRegularUser() throws Exception {
+        Environment.setCurrentUser(user);
+        final Event toRemove = Generator.generateUpcomingEvent();
+        toRemove.setId(123);
+        mockMvc.perform(delete("/rest/events/" + toRemove.getId()))
+                .andExpect(status().isForbidden());
+        verify(eventService, never()).delete(any());
+    }
+
+    @WithMockUser(roles = "ADMIN")
+    @Test
+    public void removeEventWorksWithAdmin() throws Exception {
+        user.setRole(Role.ADMIN);
+        Environment.setCurrentUser(user);
+        final Event toRemove = Generator.generateUpcomingEvent();
+        toRemove.setId(123);
+        mockMvc.perform(delete("/rest/events/" + toRemove.getId()))
+                .andExpect(status().isOk());
+        verify(eventService).delete(toRemove.getId());
+    }
+
+    @WithAnonymousUser
+    @Test
+    public void createEventByUserThrowsUnauthorizedForAnonymousAccess() throws Exception {
+        final Event toCreate = Generator.generateUpcomingEvent();
+        final Club club = Generator.generateClub();
+        mockMvc.perform(post("/rest/events/create/" + club.getName()).content(toJson(toCreate))
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isUnauthorized());
+        verify(eventService, never()).createEventByUser(toCreate, club);
+    }
+
+    @WithMockUser(roles = "USER")
+    @Test
+    public void removeEventWorksWithRegularUser() throws Exception {
+        user.setRole(Role.ADMIN);
+        Environment.setCurrentUser(user);
+        final Event toCreate = Generator.generateUpcomingEvent();
+        final Club club = Generator.generateClub();
+        when(clubService.findByName(club.getName())).thenReturn(club);
+        mockMvc.perform(post("/rest/events/create/" + club.getName()).content(toJson(toCreate))
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated());
+        verify(eventService).createEventByUser(toCreate, club);
+    }
 }

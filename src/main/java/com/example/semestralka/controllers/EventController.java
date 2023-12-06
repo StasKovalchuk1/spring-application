@@ -5,6 +5,7 @@ import com.example.semestralka.exceptions.NotFoundException;
 import com.example.semestralka.model.Club;
 import com.example.semestralka.model.Event;
 import com.example.semestralka.model.Genre;
+import com.example.semestralka.services.ClubService;
 import com.example.semestralka.services.EventService;
 import com.example.semestralka.services.GenreService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +28,13 @@ public class EventController {
 
     private final GenreService genreService;
 
+    private final ClubService clubService;
+
     @Autowired
-    public EventController(EventService eventService, GenreService genreService) {
+    public EventController(EventService eventService, GenreService genreService, ClubService clubService) {
         this.eventService = eventService;
         this.genreService = genreService;
+        this.clubService = clubService;
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -47,7 +51,7 @@ public class EventController {
     public ResponseEntity<Void> acceptEvent(@RequestBody Event event){
         eventService.acceptEvent(event);
         final HttpHeaders headers = RestUtils.createLocationHeaderFromCurrentUri("/{id}", event.getId());
-        return new ResponseEntity<>(headers, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -71,8 +75,9 @@ public class EventController {
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
-    @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> createEventByUser(@RequestBody Event event, @RequestBody Club club){
+    @PostMapping(value = "/create/{clubName}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> createEventByUser(@RequestBody Event event, @PathVariable String clubName){
+        Club club = clubService.findByName(clubName);
         eventService.createEventByUser(event, club);
         final HttpHeaders headers = RestUtils.createLocationHeaderFromCurrentUri("/{id}", event.getId());
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
