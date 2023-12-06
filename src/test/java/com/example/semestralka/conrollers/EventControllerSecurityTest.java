@@ -1,0 +1,107 @@
+package com.example.semestralka.conrollers;
+
+import com.example.semestralka.config.SecurityConfig;
+import com.example.semestralka.controllers.EventController;
+import com.example.semestralka.enviroment.Environment;
+import com.example.semestralka.enviroment.Generator;
+import com.example.semestralka.enviroment.TestConfiguration;
+import com.example.semestralka.model.Event;
+import com.example.semestralka.model.Genre;
+import com.example.semestralka.model.User;
+import com.example.semestralka.services.EventService;
+import com.example.semestralka.services.GenreService;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.checkerframework.checker.units.qual.A;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithAnonymousUser;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@WebMvcTest
+@ContextConfiguration(
+        classes = {EventControllerSecurityTest.TestConfig.class, SecurityConfig.class})
+public class EventControllerSecurityTest extends BaseControllerTestRunner{
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    private EventService eventService;
+
+    @Autowired
+    private GenreService genreService;
+
+    private User user;
+
+    @BeforeEach
+    public void setUp() {
+        this.objectMapper = Environment.getObjectMapper();
+        this.objectMapper.registerModule(new JavaTimeModule());
+        this.user = Generator.generateUser();
+    }
+
+    @AfterEach
+    public void tearDown() {
+        Environment.clearSecurityContext();
+        Mockito.reset(eventService, genreService);
+    }
+
+
+    @Configuration
+    @TestConfiguration
+    public static class TestConfig {
+
+        @MockBean
+        private EventService eventService;
+
+        @MockBean
+        private GenreService genreService;
+
+        @Bean
+        public EventController eventController() {
+            return new EventController(eventService, genreService);
+        }
+    }
+
+    @WithAnonymousUser
+    @Test
+    public void acceptEventThrowsUnauthorizedForAnonymousAccess() throws Exception{
+        final Event toAccept = Generator.generateUpcomingEvent();
+        mockMvc.perform(post("/rest/events/accept").content(toJson(toAccept))
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isUnauthorized());
+        verify(eventService, never()).acceptEvent(toAccept);
+    }
+
+    @WithMockUser
+    @Test
+    public void acceptEventThrowsForbiddenForRegularUser() throws Exception{
+        Environment.setCurrentUser(user);
+        final Event toAccept = Generator.generateUpcomingEvent();
+        mockMvc.perform(post("/rest/events/accept").content(toJson(toAccept))
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isForbidden());
+        verify(eventService, never()).acceptEvent(toAccept);
+    }
+
+}

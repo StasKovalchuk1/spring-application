@@ -122,24 +122,28 @@ public class EventControllerTest extends BaseControllerTestRunner{
 
     @Test
     public void getAllUpcomingByGenreReturnEventsForGenre() throws Exception{
-        final Genre genre = Generator.generateGenre();
-        genre.setId(123);
-        when(genreServiceMock.findByName(genre.getName())).thenReturn(genre);
+        final Genre genre1 = Generator.generateGenre();
+        genre1.setId(123);
+        when(genreServiceMock.findByName(genre1.getName())).thenReturn(genre1);
+        final Genre genre2 = Generator.generateGenre();
+        genre2.setId(321);
+        when(genreServiceMock.findByName(genre2.getName())).thenReturn(genre2);
         final Event event1 = Generator.generateUpcomingEvent();
-        event1.addGenre(genre);
+        event1.addGenre(genre1);
         final Event event2 = Generator.generateUpcomingEvent();
-        event2.addGenre(genre);
+        event2.addGenre(genre2);
         final List<Event> events = Arrays.asList(event1, event2);
         when(eventServiceMock.getAllUpcomingByGenres(any())).thenReturn(events);
         final MvcResult mvcResult = mockMvc.perform(get("/rest/events/by_genres")
-                .param("genres", genre.getName())).andReturn();
+                .param("genres", genre1.getName(), genre2.getName())).andReturn();
         System.out.println(mvcResult.getResponse().getContentAsString());
         final List<Event> result = readValue(mvcResult, new TypeReference<List<Event>>() {
         });
         assertNotNull(result);
         assertEquals(result.size(), events.size());
         verify(eventServiceMock).getAllUpcomingByGenres(any());
-        verify(genreServiceMock).findByName(genre.getName());
+        verify(genreServiceMock).findByName(genre1.getName());
+        verify(genreServiceMock).findByName(genre2.getName());
     }
 
     // TODO
