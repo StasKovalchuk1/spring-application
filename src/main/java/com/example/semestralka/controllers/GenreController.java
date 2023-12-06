@@ -60,7 +60,7 @@ public class GenreController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void addEventToGenre(@PathVariable Integer id, @RequestBody Event event) {
-        final Genre genre = genreService.find(id);
+        final Genre genre = getById(id);
         genreService.addEvent(genre, event);
     }
 

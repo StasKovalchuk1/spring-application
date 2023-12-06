@@ -75,7 +75,6 @@ public class EventControllerTest extends BaseControllerTestRunner{
         assertNotNull(result);
         assertThat(result.getMessage(), containsString("Event identified by "));
         assertThat(result.getMessage(), containsString(Integer.toString(id)));
-
     }
 
     @Test
