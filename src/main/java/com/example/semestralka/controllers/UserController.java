@@ -30,6 +30,7 @@ public class UserController {
         this.userService = userService;
     }
 
+    // TODO - не добавляется админ
     @PreAuthorize("(!#user.isAdmin() && anonymous) || hasRole('ROLE_ADMIN')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> register(@RequestBody User user) {
