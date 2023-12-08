@@ -62,6 +62,7 @@ public class FavoriteController {
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @DeleteMapping("/{eventId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeEventFromFavorite(@PathVariable Integer eventId, @AuthenticationPrincipal UserDetails userDetails) {
         Event eventToRemove = eventService.find(eventId);
         if (eventToRemove == null) {

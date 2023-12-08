@@ -1,7 +1,6 @@
-package com.example.semestralka.conrollers;
+package com.example.semestralka.controllers;
 
 import com.example.semestralka.config.SecurityConfig;
-import com.example.semestralka.controllers.EventController;
 import com.example.semestralka.enviroment.Environment;
 import com.example.semestralka.enviroment.Generator;
 import com.example.semestralka.enviroment.TestConfiguration;
@@ -27,7 +26,6 @@ import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -168,9 +166,10 @@ public class EventControllerSecurityTest extends BaseControllerTestRunner{
         Environment.setCurrentUser(user);
         final Event toRemove = Generator.generateUpcomingEvent();
         toRemove.setId(123);
+        when(eventService.find(toRemove.getId())).thenReturn(toRemove);
         mockMvc.perform(delete("/rest/events/" + toRemove.getId()))
-                .andExpect(status().isOk());
-        verify(eventService).delete(toRemove.getId());
+                .andExpect(status().isNoContent());
+        verify(eventService).delete(toRemove);
     }
 
     @WithAnonymousUser
@@ -185,8 +184,8 @@ public class EventControllerSecurityTest extends BaseControllerTestRunner{
 
     @WithMockUser(roles = "USER")
     @Test
-    public void removeEventWorksWithRegularUser() throws Exception {
-        user.setRole(Role.ADMIN);
+    public void createEventWorksWithRegularUser() throws Exception {
+        user.setRole(Role.USER);
         Environment.setCurrentUser(user);
         final Event toCreate = Generator.generateUpcomingEvent();
         final Club club = Generator.generateClub();

@@ -68,6 +68,7 @@ public class ClubController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeClub(@PathVariable Integer id) {
         final Club clubToRemove = clubService.find(id);
         clubService.delete(clubToRemove);

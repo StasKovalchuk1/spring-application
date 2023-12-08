@@ -1,7 +1,5 @@
-package com.example.semestralka.conrollers;
+package com.example.semestralka.controllers;
 
-import com.example.semestralka.controllers.EventController;
-import com.example.semestralka.controllers.GenreController;
 import com.example.semestralka.controllers.handler.ErrorInfo;
 import com.example.semestralka.enviroment.Generator;
 import com.example.semestralka.model.Event;
@@ -94,7 +92,7 @@ public class GenreControllerTest extends BaseControllerTestRunner{
 
         final MvcResult mvcResult = mockMvc.perform(get("/rest/genres/" + genre.getId() + "/events"))
                 .andExpect(status().isOk()).andReturn();
-        final List<Event> result = readValue(mvcResult, new TypeReference<List<Event>>() {
+        final List<Event> result = readValue(mvcResult, new TypeReference<>() {
         });
 
         assertNotNull(result);

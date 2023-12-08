@@ -1,4 +1,4 @@
-package com.example.semestralka.conrollers;
+package com.example.semestralka.controllers;
 
 import com.example.semestralka.controllers.handler.RestExceptionHandler;
 import com.example.semestralka.enviroment.Environment;
