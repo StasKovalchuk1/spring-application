@@ -78,20 +78,20 @@ public class CommentController {
     @DeleteMapping(value = "/{eventId}/comments/{commentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('ROLE_USER')")
-    public void deleteCommentByEventIdAndCommentId(@PathVariable Integer eventId,
+    public void removeCommentByEventIdAndCommentId(@PathVariable Integer eventId,
                                                    @PathVariable Integer commentId){
         Event event = eventService.find(eventId);
         if (event == null) {
             throw NotFoundException.create("Event", eventId);
         }
-        Comment comment = commentService.find(commentId);
-        if (comment == null || !comment.getEvent().equals(event)) {
+        Comment commentToRemove = commentService.find(commentId);
+        if (commentToRemove == null || !commentToRemove.getEvent().equals(event)) {
             throw NotFoundException.create("Comment", commentId);
         }
-        commentService.delete(comment);
+        commentService.delete(commentToRemove);
     }
 
-    @PutMapping(value = "/{eventId}/comments/{commentId}")
+    @PutMapping(value = "/{eventId}/comments/{commentId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('ROLE_USER')")
     public void editComment(@PathVariable Integer eventId,
                             @PathVariable Integer commentId,

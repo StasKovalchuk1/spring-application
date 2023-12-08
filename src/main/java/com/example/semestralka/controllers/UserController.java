@@ -66,11 +66,11 @@ public class UserController {
     public void deleteUser(@PathVariable Integer userId, @AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))
                 || userId.equals(userDetails.getUser().getId())) {
-            final User user = userService.find(userId);
-            if (user == null) {
+            final User userToDelete = userService.find(userId);
+            if (userToDelete == null) {
                 throw NotFoundException.create("User", userId);
             }
-            userService.delete(user);
+            userService.delete(userToDelete);
         } else throw NotFoundException.create("User", userId);
     }
 

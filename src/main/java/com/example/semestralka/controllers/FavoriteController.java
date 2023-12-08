@@ -63,11 +63,11 @@ public class FavoriteController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @DeleteMapping("/{eventId}")
     public void removeEventFromFavorite(@PathVariable Integer eventId, @AuthenticationPrincipal UserDetails userDetails) {
-        Event event = eventService.find(eventId);
-        if (event == null) {
+        Event eventToRemove = eventService.find(eventId);
+        if (eventToRemove == null) {
             throw NotFoundException.create("Event", eventId);
         }
-        favoriteService.delete(event, userDetails.getUser());
+        favoriteService.delete(eventToRemove, userDetails.getUser());
     }
 
 }

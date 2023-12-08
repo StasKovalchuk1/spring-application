@@ -86,6 +86,7 @@ public class EventController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping(value = "/{id}")
     public void removeEvent(@PathVariable Integer id){
-        eventService.delete(id);
+        final Event eventToRemove = eventService.find(id);
+        eventService.delete(eventToRemove);
     }
 }

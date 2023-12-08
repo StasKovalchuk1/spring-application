@@ -67,9 +67,10 @@ public class ClubController {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @DeleteMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void removeClub(@RequestBody Club club) {
-        clubService.delete(club);
+    @DeleteMapping(value = "/{id}")
+    public void removeClub(@PathVariable Integer id) {
+        final Club clubToRemove = clubService.find(id);
+        clubService.delete(clubToRemove);
     }
 
 }
