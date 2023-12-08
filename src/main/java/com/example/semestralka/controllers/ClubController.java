@@ -21,7 +21,7 @@ import java.util.List;
     добвить update()
  */
 @RestController
-@RequestMapping("rest/clubs")
+@RequestMapping("/rest/clubs")
 @PreAuthorize("permitAll()")
 public class ClubController {
 
