@@ -114,15 +114,11 @@ public class CommentService {
     @Transactional(readOnly = true)
     public List<Comment> getAllByEventFromFirst(Event event){
         Objects.requireNonNull(event);
-        if (eventRepo.existsById(event.getId())){
-            List<Comment> comments = commentRepo.getAllByEventFromFirst(event);
-            if (comments.isEmpty()){
-                throw new NotFoundException("There are no comments");
-            }
-            return comments;
+        try {
+            return commentRepo.getAllByEventFromFirst(event);
+        } catch (DataAccessException e) {
+            throw new NotFoundException("Event does not exist");
         }
-        throw new NotFoundException("Event does not exist");
-
     }
 
     @Transactional(readOnly = true)

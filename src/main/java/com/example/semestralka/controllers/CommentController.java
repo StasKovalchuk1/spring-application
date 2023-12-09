@@ -77,7 +77,7 @@ public class CommentController {
 
     @DeleteMapping(value = "/{eventId}/comments/{commentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public void removeCommentByEventIdAndCommentId(@PathVariable Integer eventId,
                                                    @PathVariable Integer commentId){
         Event event = eventService.find(eventId);
@@ -93,6 +93,7 @@ public class CommentController {
 
     @PutMapping(value = "/{eventId}/comments/{commentId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('ROLE_USER')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void editComment(@PathVariable Integer eventId,
                             @PathVariable Integer commentId,
                             @RequestBody Comment updatedComment){
