@@ -1,7 +1,7 @@
 package com.example.semestralka.controllers;
 
 import com.example.semestralka.controllers.handler.RestExceptionHandler;
-import com.example.semestralka.enviroment.Environment;
+import com.example.semestralka.environment.Environment;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,8 +11,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static com.example.semestralka.enviroment.Environment.createDefaultMessageConverter;
-import static com.example.semestralka.enviroment.Environment.createStringEncodingMessageConverter;
+import static com.example.semestralka.environment.Environment.createDefaultMessageConverter;
+import static com.example.semestralka.environment.Environment.createStringEncodingMessageConverter;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class BaseControllerTestRunner {

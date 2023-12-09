@@ -1,9 +1,9 @@
 package com.example.semestralka.controllers;
 
 import com.example.semestralka.config.SecurityConfig;
-import com.example.semestralka.enviroment.Environment;
-import com.example.semestralka.enviroment.Generator;
-import com.example.semestralka.enviroment.TestConfiguration;
+import com.example.semestralka.environment.Environment;
+import com.example.semestralka.environment.Generator;
+import com.example.semestralka.environment.TestConfiguration;
 import com.example.semestralka.model.Club;
 import com.example.semestralka.model.Event;
 import com.example.semestralka.model.Role;
@@ -184,7 +184,7 @@ public class EventControllerSecurityTest extends BaseControllerTestRunner{
 
     @WithMockUser(roles = "USER")
     @Test
-    public void createEventWorksWithRegularUser() throws Exception {
+    public void createEventByUserWorksWithRegularUser() throws Exception {
         user.setRole(Role.USER);
         Environment.setCurrentUser(user);
         final Event toCreate = Generator.generateUpcomingEvent();

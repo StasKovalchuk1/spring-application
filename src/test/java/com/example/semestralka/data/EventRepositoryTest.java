@@ -15,7 +15,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.semestralka.enviroment.Generator.*;
+import static com.example.semestralka.environment.Generator.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest

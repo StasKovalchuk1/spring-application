@@ -1,7 +1,7 @@
 package com.example.semestralka.controllers;
 
 import com.example.semestralka.controllers.handler.ErrorInfo;
-import com.example.semestralka.enviroment.Generator;
+import com.example.semestralka.environment.Generator;
 import com.example.semestralka.model.Club;
 import com.example.semestralka.model.Event;
 import com.example.semestralka.services.ClubService;
@@ -27,8 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
@@ -105,7 +104,13 @@ public class ClubControllerTest extends BaseControllerTestRunner{
     }
 
     @Test
-    public void removeClubRemovesClubByUsingService(){}
+    public void removeClubRemovesClubByUsingService() throws Exception {
+        final Club club = Generator.generateClub();
+        club.setId(1337);
+        when(clubServiceMock.find(club.getId())).thenReturn(club);
+        mockMvc.perform(delete("/rest/clubs/" + club.getId())).andExpect(status().isNoContent());
+        verify(clubServiceMock).delete(club);
+    }
 }
 
 

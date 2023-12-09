@@ -1,7 +1,7 @@
 package com.example.semestralka.controllers;
 
 import com.example.semestralka.controllers.handler.ErrorInfo;
-import com.example.semestralka.enviroment.Generator;
+import com.example.semestralka.environment.Generator;
 import com.example.semestralka.model.Event;
 import com.example.semestralka.model.Genre;
 import com.example.semestralka.services.EventService;

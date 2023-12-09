@@ -1,4 +1,4 @@
-package com.example.semestralka.enviroment;
+package com.example.semestralka.environment;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

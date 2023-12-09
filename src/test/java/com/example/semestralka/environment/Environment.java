@@ -1,4 +1,4 @@
-package com.example.semestralka.enviroment;
+package com.example.semestralka.environment;
 
 import com.example.semestralka.model.User;
 import com.example.semestralka.security.model.UserDetails;
