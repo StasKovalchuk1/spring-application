@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("rest/myProfile")
+@RequestMapping("/rest/myProfile")
 public class UserController {
 
     private final UserService userService;
