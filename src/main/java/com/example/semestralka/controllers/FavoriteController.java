@@ -15,13 +15,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("rest/favorites")
+@RequestMapping("/rest/favorites")
 public class FavoriteController {
 
     private final FavoriteService favoriteService;
@@ -36,25 +37,23 @@ public class FavoriteController {
 
     @GetMapping
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<List<Event>> getFavorites(@AuthenticationPrincipal UserDetails userDetails) {
-        User user = userDetails.getUser();
-        List<Event> favorites = favoriteService.getAllFavoriteEvents(user);
-        return new ResponseEntity<>(favorites, HttpStatus.OK);
+    public List<Event> getFavorites(Authentication auth) {
+        User user = ((UserDetails) auth.getPrincipal()).getUser();
+        return favoriteService.getAllFavoriteEvents(user);
     }
 
     @GetMapping("/upcoming")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<List<Event>> getUpcomingFavorites(@AuthenticationPrincipal UserDetails userDetails) {
-        User user = userDetails.getUser();
-        List<Event> favorites = favoriteService.getAllFavoriteUpcomingEvents(user);
-        return new ResponseEntity<>(favorites, HttpStatus.OK);
+    public List<Event>  getUpcomingFavorites(Authentication auth) {
+        User user = ((UserDetails) auth.getPrincipal()).getUser();
+        return favoriteService.getAllFavoriteUpcomingEvents(user);
     }
 
     @PostMapping("/{eventId}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> addToFavorite(@PathVariable Integer eventId, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<Void> addToFavorite(@PathVariable Integer eventId, Authentication auth) {
         Event event = eventService.find(eventId);
-        favoriteService.save(event, userDetails.getUser());
+        favoriteService.save(event, ((UserDetails) auth.getPrincipal()).getUser());
         // перенаправляет на список всех избранных
         final HttpHeaders headers = RestUtils.createLocationHeaderFromCurrentUri("/upcoming");
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
@@ -63,12 +62,12 @@ public class FavoriteController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @DeleteMapping("/{eventId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeEventFromFavorite(@PathVariable Integer eventId, @AuthenticationPrincipal UserDetails userDetails) {
+    public void removeEventFromFavorite(@PathVariable Integer eventId, Authentication auth) {
         Event eventToRemove = eventService.find(eventId);
         if (eventToRemove == null) {
             throw NotFoundException.create("Event", eventId);
         }
-        favoriteService.delete(eventToRemove, userDetails.getUser());
+        favoriteService.delete(eventToRemove, ((UserDetails) auth.getPrincipal()).getUser());
     }
 
 }

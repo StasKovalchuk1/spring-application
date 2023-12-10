@@ -58,7 +58,7 @@ public class CommentControllerSecurityTest extends BaseControllerTestRunner{
     @AfterEach
     public void tearDown() {
         Environment.clearSecurityContext();
-        Mockito.reset(commentService);
+        Mockito.reset(eventService, commentService);
     }
 
     @Configuration

@@ -4,10 +4,7 @@ import com.example.semestralka.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Objects;
+import java.util.*;
 
 public class UserDetails implements org.springframework.security.core.userdetails.UserDetails {
 
@@ -30,7 +27,7 @@ public class UserDetails implements org.springframework.security.core.userdetail
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return Collections.unmodifiableCollection(authorities);
     }
 
     @Override
