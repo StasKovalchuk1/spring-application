@@ -1,5 +1,6 @@
 package com.example.semestralka.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -56,6 +57,7 @@ public class User extends AbstractEntity {
         favorites.remove(favorite);
     }
 
+    @JsonIgnore
     public boolean isAdmin() {
         return role == Role.ADMIN;
     }

@@ -99,27 +99,27 @@ public class CommentControllerSecurityTest extends BaseControllerTestRunner{
     }
 
     //TODO does not work
-    @WithMockUser(roles = "USER")
+//    @WithMockUser(roles = "USER")
     @Test
     public void addCommentWorksWithAuthorizedUser() throws Exception {
-//        user.setId(228);
-//        user.setRole(Role.USER);
-//        Environment.setCurrentUser(user);
-//        final Event event = Generator.generateUpcomingEvent();
-//        event.setId(1337);
-//        final Comment comment = Generator.generateComment();
-//
-//        Authentication authMock = mock(Authentication.class);
-//        UserDetails userDetailsMock = mock(UserDetails.class);
-//        when(authMock.getPrincipal()).thenReturn(userDetailsMock);
-//        when(userDetailsMock.getUser()).thenReturn(user);
-//        when(eventService.find(event.getId())).thenReturn(event);
-//
-//        mockMvc.perform(post("/rest/events/" + event.getId() + "/comments")
-//                        .content(toJson(comment))
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .principal(authMock))
-//                        .andExpect(status().isCreated());
+        user.setId(228);
+        user.setRole(Role.USER);
+        Environment.setCurrentUser(user);
+        final Event event = Generator.generateUpcomingEvent();
+        event.setId(1337);
+        final Comment comment = Generator.generateComment();
+
+        Authentication authMock = mock(Authentication.class);
+        UserDetails userDetailsMock = mock(UserDetails.class);
+        when(authMock.getPrincipal()).thenReturn(userDetailsMock);
+        when(userDetailsMock.getUser()).thenReturn(user);
+        when(eventService.find(event.getId())).thenReturn(event);
+
+        mockMvc.perform(post("/rest/events/" + event.getId() + "/comments")
+                        .content(toJson(comment))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .principal(authMock))
+                        .andExpect(status().isCreated());
     }
 
     //TODO

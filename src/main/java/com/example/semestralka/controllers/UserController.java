@@ -2,8 +2,6 @@ package com.example.semestralka.controllers;
 
 import com.example.semestralka.controllers.util.RestUtils;
 import com.example.semestralka.exceptions.NotFoundException;
-import com.example.semestralka.exceptions.PersistenceException;
-import com.example.semestralka.model.Event;
 import com.example.semestralka.model.User;
 import com.example.semestralka.security.model.UserDetails;
 import com.example.semestralka.services.UserService;
@@ -14,13 +12,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/rest/myProfile")
+@RequestMapping("/rest/users")
 public class UserController {
 
     private final UserService userService;
@@ -30,7 +25,11 @@ public class UserController {
         this.userService = userService;
     }
 
-    // TODO - не добавляется админ
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public Iterable<User> getAll(){
+        return userService.findAll();
+    }
+
     @PreAuthorize("(!#user.isAdmin() && anonymous) || hasRole('ROLE_ADMIN')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> register(@RequestBody User user) {
@@ -46,32 +45,38 @@ public class UserController {
         return ((UserDetails) auth.getPrincipal()).getUser();
     }
 
-    @PostMapping("/edit")
+    @PutMapping("/myProfile/update")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> updateUser(@RequestBody User user, @AuthenticationPrincipal UserDetails userDetails) {
-        if (user.getId().equals(userDetails.getUser().getId())) {
-            if (userService.exists(user.getId())) {
-                userService.save(user);
+    public ResponseEntity<Void> updateUser(@RequestBody User updatedUser, Authentication auth) {
+        User user = ((UserDetails) auth.getPrincipal()).getUser();
+        if (updatedUser.getId().equals(user.getId())) {
+            if (userService.exists(updatedUser.getId())) {
+                userService.save(updatedUser);
                 final HttpHeaders headers = RestUtils.createLocationHeaderFromCurrentUri("/current");
                 return new ResponseEntity<>(headers, HttpStatus.OK);
-            } else {
-                throw NotFoundException.create("User", user.getId());
-            }
+            } else throw NotFoundException.create("User", updatedUser.getId());
         } else return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
+    //Deleting user by admin
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@PathVariable Integer userId, @AuthenticationPrincipal UserDetails userDetails) {
-        if (userDetails.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))
-                || userId.equals(userDetails.getUser().getId())) {
-            final User userToDelete = userService.find(userId);
-            if (userToDelete == null) {
-                throw NotFoundException.create("User", userId);
-            }
+    public void deleteUser(@PathVariable Integer userId) {
+        final User userToDelete = userService.find(userId);
+        if (userToDelete != null) {
             userService.delete(userToDelete);
         } else throw NotFoundException.create("User", userId);
     }
 
+    //User deletes his own account
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @DeleteMapping("/myProfile/delete")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteAccount(Authentication auth){
+        User userToDelete = ((UserDetails) auth.getPrincipal()).getUser();
+        if (userToDelete != null) {
+            userService.delete(userToDelete);
+        } else throw new NotFoundException("User does not exist");
+    }
 }
