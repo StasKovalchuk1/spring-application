@@ -71,7 +71,9 @@ public class ClubController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeClub(@PathVariable Integer id) {
         final Club clubToRemove = clubService.find(id);
-        clubService.delete(clubToRemove);
+        if (clubToRemove!=null) {
+            clubService.delete(clubToRemove);
+        } else throw NotFoundException.create("Club", id);
     }
 
 }

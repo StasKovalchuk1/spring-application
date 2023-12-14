@@ -70,9 +70,8 @@ public class GenreController {
     public void removeEventFromGenre(@PathVariable Integer genreId, @PathVariable Integer eventId) {
         final Genre genre = genreService.find(genreId);
         final Event eventToRemove = eventService.find(eventId);
-        if (eventToRemove == null) {
-            throw NotFoundException.create("Event", eventId);
-        }
-        genreService.removeEvent(genre, eventToRemove);
+        if (eventToRemove != null) {
+            genreService.removeEvent(genre, eventToRemove);
+        } else throw NotFoundException.create("Event", eventId);
     }
 }

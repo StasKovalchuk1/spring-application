@@ -88,6 +88,9 @@ public class EventController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeEvent(@PathVariable Integer id){
         final Event eventToRemove = eventService.find(id);
-        eventService.delete(eventToRemove);
+        if (eventToRemove!=null){
+            eventService.delete(eventToRemove);
+        } else throw NotFoundException.create("Event", id);
+
     }
 }

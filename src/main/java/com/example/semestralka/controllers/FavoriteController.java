@@ -64,10 +64,9 @@ public class FavoriteController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeEventFromFavorite(@PathVariable Integer eventId, Authentication auth) {
         Event eventToRemove = eventService.find(eventId);
-        if (eventToRemove == null) {
-            throw NotFoundException.create("Event", eventId);
-        }
-        favoriteService.delete(eventToRemove, ((UserDetails) auth.getPrincipal()).getUser());
+        if (eventToRemove != null) {
+            favoriteService.delete(eventToRemove, ((UserDetails) auth.getPrincipal()).getUser());
+        } else throw NotFoundException.create("Event", eventId);
     }
 
 }
