@@ -51,7 +51,7 @@ public class UserController {
         User user = ((UserDetails) auth.getPrincipal()).getUser();
         if (updatedUser.getId().equals(user.getId())) {
             if (userService.exists(updatedUser.getId())) {
-                userService.save(updatedUser);
+                userService.update(user);
                 final HttpHeaders headers = RestUtils.createLocationHeaderFromCurrentUri("/current");
                 return new ResponseEntity<>(headers, HttpStatus.OK);
             } else throw NotFoundException.create("User", updatedUser.getId());

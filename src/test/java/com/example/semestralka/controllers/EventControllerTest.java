@@ -27,8 +27,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -168,4 +167,27 @@ public class EventControllerTest extends BaseControllerTestRunner{
         verify(eventServiceMock).delete(event);
     }
 
+    @Test
+    public void editEventEditsByUsingService() throws Exception{
+        final Event eventToUpdate = Generator.generateUpcomingEvent();
+        eventToUpdate.setName("Komiks");
+        eventToUpdate.setId(123);
+        final Event updatedEvent = new Event();
+        //Only event name was updated
+        updatedEvent.setName("Gluk");
+        updatedEvent.setId(eventToUpdate.getId());
+        updatedEvent.setEventDate(eventToUpdate.getEventDate());
+        updatedEvent.setComments(eventToUpdate.getComments());
+        updatedEvent.setPrice(eventToUpdate.getPrice());
+        updatedEvent.setAccepted(eventToUpdate.isAccepted());
+        when(eventServiceMock.find(eventToUpdate.getId())).thenReturn(eventToUpdate);
+        when(eventServiceMock.exists(eventToUpdate.getId())).thenReturn(true);
+
+        mockMvc.perform(put("/rest/events/" + eventToUpdate.getId())
+                        .content(toJson(updatedEvent))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+        verify(eventServiceMock).update(any(Event.class));
+
+    }
 }

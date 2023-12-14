@@ -28,9 +28,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest
@@ -193,5 +191,79 @@ public class EventControllerSecurityTest extends BaseControllerTestRunner{
         mockMvc.perform(post("/rest/events/create/" + club.getName()).content(toJson(toCreate))
                 .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated());
         verify(eventService).createEventByUser(toCreate, club);
+    }
+
+    @WithAnonymousUser
+    @Test
+    public void editEventThrowsUnauthorizedForAnonymousAccess() throws Exception {
+        final Event eventToUpdate = Generator.generateUpcomingEvent();
+        eventToUpdate.setName("Komiks");
+        eventToUpdate.setId(123);
+        final Event updatedEvent = new Event();
+        //Only event name was updated
+        updatedEvent.setName("Gluk");
+        updatedEvent.setId(eventToUpdate.getId());
+        updatedEvent.setEventDate(eventToUpdate.getEventDate());
+        updatedEvent.setComments(eventToUpdate.getComments());
+        updatedEvent.setPrice(eventToUpdate.getPrice());
+        updatedEvent.setAccepted(eventToUpdate.isAccepted());
+        when(eventService.find(eventToUpdate.getId())).thenReturn(eventToUpdate);
+        when(eventService.exists(eventToUpdate.getId())).thenReturn(true);
+
+        mockMvc.perform(put("/rest/events/" + eventToUpdate.getId())
+                        .content(toJson(updatedEvent))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
+        verify(eventService, never()).update(any());
+    }
+
+    @WithMockUser(roles = "ADMIN")
+    @Test
+    public void editEventWorksForAdmin() throws Exception {
+        user.setRole(Role.ADMIN);
+        final Event eventToUpdate = Generator.generateUpcomingEvent();
+        eventToUpdate.setName("Komiks");
+        eventToUpdate.setId(123);
+        final Event updatedEvent = new Event();
+        //Only event name was updated
+        updatedEvent.setName("Gluk");
+        updatedEvent.setId(eventToUpdate.getId());
+        updatedEvent.setEventDate(eventToUpdate.getEventDate());
+        updatedEvent.setComments(eventToUpdate.getComments());
+        updatedEvent.setPrice(eventToUpdate.getPrice());
+        updatedEvent.setAccepted(eventToUpdate.isAccepted());
+        when(eventService.find(eventToUpdate.getId())).thenReturn(eventToUpdate);
+        when(eventService.exists(eventToUpdate.getId())).thenReturn(true);
+
+        mockMvc.perform(put("/rest/events/" + eventToUpdate.getId())
+                        .content(toJson(updatedEvent))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+        verify(eventService).update(any(Event.class));
+    }
+
+    @WithMockUser(roles = "USER")
+    @Test
+    public void editEventThrowsForbiddenForRegularUser() throws Exception {
+        user.setRole(Role.USER);
+        final Event eventToUpdate = Generator.generateUpcomingEvent();
+        eventToUpdate.setName("Komiks");
+        eventToUpdate.setId(123);
+        final Event updatedEvent = new Event();
+        //Only event name was updated
+        updatedEvent.setName("Gluk");
+        updatedEvent.setId(eventToUpdate.getId());
+        updatedEvent.setEventDate(eventToUpdate.getEventDate());
+        updatedEvent.setComments(eventToUpdate.getComments());
+        updatedEvent.setPrice(eventToUpdate.getPrice());
+        updatedEvent.setAccepted(eventToUpdate.isAccepted());
+        when(eventService.find(eventToUpdate.getId())).thenReturn(eventToUpdate);
+        when(eventService.exists(eventToUpdate.getId())).thenReturn(true);
+
+        mockMvc.perform(put("/rest/events/" + eventToUpdate.getId())
+                        .content(toJson(updatedEvent))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+        verify(eventService, never()).update(any());
     }
 }
