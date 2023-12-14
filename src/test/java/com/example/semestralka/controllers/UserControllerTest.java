@@ -84,12 +84,13 @@ public class UserControllerTest extends BaseControllerTestRunner{
         updatedUser.setEmail(currentUser.getEmail());
         updatedUser.setPassword(updatedUser.getPassword());
         updatedUser.setRole(currentUser.getRole());
+
         mockMvc.perform(put("/rest/users/myProfile/update")
                 .content(toJson(updatedUser))
                 .contentType(MediaType.APPLICATION_JSON)
                 .principal(authMock))
                 .andExpect(status().isOk());
-        verify(userServiceMock).save(updatedUser);
+        verify(userServiceMock).update(any(User.class));
     }
 
     @Test

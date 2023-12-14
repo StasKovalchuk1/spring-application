@@ -2,6 +2,7 @@ package com.example.semestralka.controllers;
 
 import com.example.semestralka.controllers.util.RestUtils;
 import com.example.semestralka.exceptions.NotFoundException;
+import com.example.semestralka.exceptions.ValidationException;
 import com.example.semestralka.model.Club;
 import com.example.semestralka.model.Event;
 import com.example.semestralka.model.Genre;
@@ -40,9 +41,7 @@ public class EventController {
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Event getById(@PathVariable Integer id){
         Event result = eventService.find(id);
-        if (result==null){
-            throw NotFoundException.create("Event", id);
-        }
+        if (result==null) throw NotFoundException.create("Event", id);
         return result;
     }
 
@@ -88,9 +87,18 @@ public class EventController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeEvent(@PathVariable Integer id){
         final Event eventToRemove = eventService.find(id);
-        if (eventToRemove!=null){
-            eventService.delete(eventToRemove);
-        } else throw NotFoundException.create("Event", id);
+        if (eventToRemove==null) throw NotFoundException.create("Event", id);
+        eventService.delete(eventToRemove);
 
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PutMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void editEvent(@PathVariable Integer id, @RequestBody Event updatedEvent){
+        final Event eventToUpdate = eventService.find(id);
+        if (eventToUpdate == null || !eventService.exists(id)) throw NotFoundException.create("Event", id);
+        if (!updatedEvent.getId().equals(eventToUpdate.getId())) throw new ValidationException("Updated event has different id");
+        eventService.update(updatedEvent);
     }
 }
