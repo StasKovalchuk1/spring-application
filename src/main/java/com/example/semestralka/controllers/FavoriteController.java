@@ -38,21 +38,21 @@ public class FavoriteController {
     @GetMapping
     @PreAuthorize("hasRole('ROLE_USER')")
     public List<Event> getFavorites(Authentication auth) {
-        User user = ((UserDetails) auth.getPrincipal()).getUser();
+        final User user = ((UserDetails) auth.getPrincipal()).getUser();
         return favoriteService.getAllFavoriteEvents(user);
     }
 
     @GetMapping("/upcoming")
     @PreAuthorize("hasRole('ROLE_USER')")
     public List<Event>  getUpcomingFavorites(Authentication auth) {
-        User user = ((UserDetails) auth.getPrincipal()).getUser();
+        final User user = ((UserDetails) auth.getPrincipal()).getUser();
         return favoriteService.getAllFavoriteUpcomingEvents(user);
     }
 
     @PostMapping("/{eventId}")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Void> addToFavorite(@PathVariable Integer eventId, Authentication auth) {
-        Event event = eventService.find(eventId);
+        final Event event = eventService.find(eventId);
         favoriteService.save(event, ((UserDetails) auth.getPrincipal()).getUser());
         // перенаправляет на список всех избранных
         final HttpHeaders headers = RestUtils.createLocationHeaderFromCurrentUri("/upcoming");
@@ -63,7 +63,7 @@ public class FavoriteController {
     @DeleteMapping("/{eventId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeEventFromFavorite(@PathVariable Integer eventId, Authentication auth) {
-        Event eventToRemove = eventService.find(eventId);
+        final Event eventToRemove = eventService.find(eventId);
         if (eventToRemove != null) {
             favoriteService.delete(eventToRemove, ((UserDetails) auth.getPrincipal()).getUser());
         } else throw NotFoundException.create("Event", eventId);

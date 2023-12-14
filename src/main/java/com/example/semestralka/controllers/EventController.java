@@ -40,7 +40,7 @@ public class EventController {
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Event getById(@PathVariable Integer id){
-        Event result = eventService.find(id);
+        final Event result = eventService.find(id);
         if (result==null) throw NotFoundException.create("Event", id);
         return result;
     }
@@ -66,7 +66,7 @@ public class EventController {
 
     @GetMapping(value = "/by_genres", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Event> getAllUpcomingByGenres(@RequestParam(name = "genres", required = false) List<String> genreNames) {
-        List<Genre> genres = new ArrayList<>();
+        final List<Genre> genres = new ArrayList<>();
         for (String name : genreNames) {
             genres.add(genreService.findByName(name));
         }
@@ -76,7 +76,7 @@ public class EventController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping(value = "/create/{clubName}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> createEventByUser(@RequestBody Event event, @PathVariable String clubName){
-        Club club = clubService.findByName(clubName);
+        final Club club = clubService.findByName(clubName);
         eventService.createEventByUser(event, club);
         final HttpHeaders headers = RestUtils.createLocationHeaderFromCurrentUri("/{id}", event.getId());
         return new ResponseEntity<>(headers, HttpStatus.CREATED);

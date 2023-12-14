@@ -52,7 +52,7 @@ public class GenreController {
 
     @GetMapping(value = "/{id}/events", produces = MediaType.APPLICATION_JSON_VALUE)
     public Iterable<Event> getEventsByGenre(@PathVariable Integer id) {
-        Genre genre = genreService.find(id);
+        final Genre genre = genreService.find(id);
         return eventService.getAllByGenre(genre);
     }
 

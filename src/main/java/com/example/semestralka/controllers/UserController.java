@@ -48,7 +48,7 @@ public class UserController {
     @PutMapping("/myProfile/update")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Void> updateUser(@RequestBody User updatedUser, Authentication auth) {
-        User user = ((UserDetails) auth.getPrincipal()).getUser();
+        final User user = ((UserDetails) auth.getPrincipal()).getUser();
         if (updatedUser.getId().equals(user.getId())) {
             if (userService.exists(updatedUser.getId())) {
                 userService.update(user);
@@ -74,7 +74,7 @@ public class UserController {
     @DeleteMapping("/myProfile/delete")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteAccount(Authentication auth){
-        User userToDelete = ((UserDetails) auth.getPrincipal()).getUser();
+        final User userToDelete = ((UserDetails) auth.getPrincipal()).getUser();
         if (userToDelete != null) {
             userService.delete(userToDelete);
         } else throw new NotFoundException("User does not exist");

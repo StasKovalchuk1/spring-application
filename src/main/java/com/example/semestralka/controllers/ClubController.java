@@ -42,7 +42,7 @@ public class ClubController {
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Club getById(@PathVariable Integer id){
-        Club result = clubService.find(id);
+        final Club result = clubService.find(id);
         if (result==null){
             throw NotFoundException.create("Club", id);
         }
@@ -51,7 +51,7 @@ public class ClubController {
 
     @GetMapping(value = "/{clubId}/events")
     public List<Event> getAllUpcomingEventsByClub(@PathVariable Integer clubId){
-        Club club = clubService.find(clubId);
+        final Club club = clubService.find(clubId);
         if (club==null){
             throw NotFoundException.create("Club", clubId);
         }
