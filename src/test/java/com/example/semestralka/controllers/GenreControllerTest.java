@@ -97,6 +97,7 @@ public class GenreControllerTest extends BaseControllerTestRunner{
 
         assertNotNull(result);
         assertEquals(result.size(), events.size());
+        verify(eventServiceMock).getAllByGenre(genre);
     }
 
     @Test

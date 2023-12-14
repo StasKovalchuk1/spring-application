@@ -80,7 +80,7 @@ public class UserControllerSecurityTest extends BaseControllerTestRunner {
                                 .content(toJson(toRegister))
                                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                                 .andExpect(status().isCreated());
-        verify(userService).save(any(User.class));
+        verify(userService).save(toRegister);
     }
 
     @WithAnonymousUser
@@ -123,7 +123,7 @@ public class UserControllerSecurityTest extends BaseControllerTestRunner {
                         .content(toJson(toRegister))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                         .andExpect(status().isCreated());
-        verify(userService).save(any(User.class));
+        verify(userService).save(toRegister);
     }
 
     @WithMockUser

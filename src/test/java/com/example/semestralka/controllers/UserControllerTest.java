@@ -41,7 +41,7 @@ public class UserControllerTest extends BaseControllerTestRunner{
 
     @Test
     public void getAllGetsAllUsersByUsingUserService() throws Exception {
-        List<User> users = new ArrayList<>();
+        final List<User> users = new ArrayList<>();
         for (int i = 0; i<5; ++i){
             User user = Generator.generateUser();
             user.setId(i);
@@ -57,7 +57,7 @@ public class UserControllerTest extends BaseControllerTestRunner{
     }
     @Test
     public void registerSavesByUsingUserService() throws Exception {
-        User user = Generator.generateUser();
+        final User user = Generator.generateUser();
         mockMvc.perform(post("/rest/users")
                 .content(toJson(user))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -67,7 +67,7 @@ public class UserControllerTest extends BaseControllerTestRunner{
 
     @Test
     public void updateUserUpdatesByUsingUserService() throws Exception{
-        User currentUser = Generator.generateUser();
+        final User currentUser = Generator.generateUser();
         currentUser.setUsername("Stas");
         currentUser.setId(1337);
         Authentication authMock = mock(Authentication.class);
@@ -76,7 +76,7 @@ public class UserControllerTest extends BaseControllerTestRunner{
         when(userDetailsMock.getUser()).thenReturn(currentUser);
         when(userServiceMock.exists(currentUser.getId())).thenReturn(true);
 
-        User updatedUser = new User();
+        final User updatedUser = new User();
         //only username was updated
         updatedUser.setUsername("Daniil");
         updatedUser.setId(currentUser.getId());
@@ -94,7 +94,7 @@ public class UserControllerTest extends BaseControllerTestRunner{
 
     @Test
     public void updateUserThrowsUnauthorizedIfIdOfUpdatedUserIsDifferent() throws Exception{
-        User currentUser = Generator.generateUser();
+        final User currentUser = Generator.generateUser();
         currentUser.setUsername("Stas");
         currentUser.setId(1337);
         Authentication authMock = mock(Authentication.class);
@@ -102,7 +102,7 @@ public class UserControllerTest extends BaseControllerTestRunner{
         when(authMock.getPrincipal()).thenReturn(userDetailsMock);
         when(userDetailsMock.getUser()).thenReturn(currentUser);
 
-        User updatedUser = new User();
+        final User updatedUser = new User();
         //username was updated, id is different
         updatedUser.setUsername("Daniil");
         updatedUser.setId(111);
@@ -115,11 +115,12 @@ public class UserControllerTest extends BaseControllerTestRunner{
                         .contentType(MediaType.APPLICATION_JSON)
                         .principal(authMock))
                 .andExpect(status().isUnauthorized());
+        verify(userServiceMock, never()).update(any());
     }
 
     @Test
     public void deleteUserDeletesByUsingUserService() throws Exception{
-        User userToDelete = Generator.generateUser();
+        final User userToDelete = Generator.generateUser();
         userToDelete.setId(1337);
         when(userServiceMock.find(userToDelete.getId())).thenReturn(userToDelete);
 
@@ -130,7 +131,7 @@ public class UserControllerTest extends BaseControllerTestRunner{
 
     @Test
     public void deleteAccountDeletesByUsingUserService() throws Exception{
-        User currentUser = Generator.generateUser();
+        final User currentUser = Generator.generateUser();
         currentUser.setId(1337);
         Authentication authMock = mock(Authentication.class);
         UserDetails userDetailsMock = mock(UserDetails.class);

@@ -86,7 +86,7 @@ public class FavoriteControllerSecurityTest extends BaseControllerTestRunner{
     @Test
     public void getFavoritesThrowsUnauthorizedForAnonymousAccess() throws Exception {
         mockMvc.perform(get("/rest/favorites")).andExpect(status().isUnauthorized());
-        verify(favoriteService, never()).getAllFavoriteEvents(user);
+        verify(favoriteService, never()).getAllFavoriteEvents(any());
     }
 
     @WithMockUser(roles = "ADMIN")
@@ -94,7 +94,7 @@ public class FavoriteControllerSecurityTest extends BaseControllerTestRunner{
     public void getFavoritesThrowsForbiddenForAdmin() throws Exception {
         user.setRole(Role.ADMIN);
         mockMvc.perform(get("/rest/favorites")).andExpect(status().isForbidden());
-        verify(favoriteService, never()).getAllFavoriteEvents(user);
+        verify(favoriteService, never()).getAllFavoriteEvents(any());
     }
 
     //Todo does not work
@@ -128,7 +128,7 @@ public class FavoriteControllerSecurityTest extends BaseControllerTestRunner{
     @Test
     public void getUpcomingFavoritesThrowsUnauthorizedForAnonymousAccess() throws Exception {
         mockMvc.perform(get("/rest/favorites/upcoming")).andExpect(status().isUnauthorized());
-        verify(favoriteService, never()).getAllFavoriteUpcomingEvents(user);
+        verify(favoriteService, never()).getAllFavoriteUpcomingEvents(any());
     }
 
     @WithMockUser(roles = "ADMIN")
@@ -136,7 +136,7 @@ public class FavoriteControllerSecurityTest extends BaseControllerTestRunner{
     public void getUpcomingFavoritesThrowsForbiddenForAdmin() throws Exception {
         user.setRole(Role.ADMIN);
         mockMvc.perform(get("/rest/favorites/upcoming")).andExpect(status().isForbidden());
-        verify(favoriteService, never()).getAllFavoriteUpcomingEvents(user);
+        verify(favoriteService, never()).getAllFavoriteUpcomingEvents(any());
     }
 
     @WithMockUser(roles = "USER")
@@ -148,22 +148,22 @@ public class FavoriteControllerSecurityTest extends BaseControllerTestRunner{
     @WithAnonymousUser
     @Test
     public void addToFavoriteThrowsUnauthorizedForAnonymousAccess() throws Exception {
-        Event event = Generator.generateUpcomingEvent();
+        final Event event = Generator.generateUpcomingEvent();
         event.setId(1337);
         mockMvc.perform(post("/rest/favorites/" + event.getId()))
                 .andExpect(status().isUnauthorized());
-        verify(favoriteService, never()).save(event,user);
+        verify(favoriteService, never()).save(any(),any());
     }
 
     @WithMockUser(roles = "ADMIN")
     @Test
     public void addToFavoriteThrowsForbiddenForAdmin() throws Exception {
         user.setRole(Role.ADMIN);
-        Event event = Generator.generateUpcomingEvent();
+        final Event event = Generator.generateUpcomingEvent();
         event.setId(1337);
         mockMvc.perform(post("/rest/favorites/" + event.getId()))
                 .andExpect(status().isForbidden());
-        verify(favoriteService, never()).save(event,user);
+        verify(favoriteService, never()).save(any(),any());
     }
 
     @WithMockUser(roles = "USER")
@@ -175,22 +175,22 @@ public class FavoriteControllerSecurityTest extends BaseControllerTestRunner{
     @WithAnonymousUser
     @Test
     public void removeEventFromFavoriteThrowsUnauthorizedForAnonymousAccess() throws Exception {
-        Event event = Generator.generateUpcomingEvent();
+        final Event event = Generator.generateUpcomingEvent();
         event.setId(1337);
         mockMvc.perform(delete("/rest/favorites/" + event.getId()))
                 .andExpect(status().isUnauthorized());
-        verify(favoriteService, never()).delete(event, user);
+        verify(favoriteService, never()).delete(any(), any());
     }
 
     @WithMockUser(roles = "ADMIN")
     @Test
     public void removeEventFromFavoriteThrowsForbiddenForAdmin() throws Exception {
         user.setRole(Role.ADMIN);
-        Event event = Generator.generateUpcomingEvent();
+        final Event event = Generator.generateUpcomingEvent();
         event.setId(1337);
         mockMvc.perform(delete("/rest/favorites/" + event.getId()))
                 .andExpect(status().isForbidden());
-        verify(favoriteService, never()).delete(event, user);
+        verify(favoriteService, never()).delete(any(), any());
     }
 
     @WithMockUser(roles = "USER")

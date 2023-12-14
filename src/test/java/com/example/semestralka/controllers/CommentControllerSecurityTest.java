@@ -95,7 +95,7 @@ public class CommentControllerSecurityTest extends BaseControllerTestRunner{
                         .contentType(MediaType.APPLICATION_JSON)
                         .principal(authMock))
                 .andExpect(status().isUnauthorized());
-        verify(commentService, never()).save(comment, user, event);
+        verify(commentService, never()).save(any(), any(), any());
     }
 
     //TODO does not work
@@ -138,6 +138,7 @@ public class CommentControllerSecurityTest extends BaseControllerTestRunner{
 
         mockMvc.perform(delete("/rest/events/" + event.getId() + "/comments/" + comment.getId()))
                 .andExpect(status().isUnauthorized());
+        verify(commentService, never()).delete(any());
     }
 
     @WithMockUser(roles = "USER")
@@ -189,6 +190,7 @@ public class CommentControllerSecurityTest extends BaseControllerTestRunner{
         mockMvc.perform(put("/rest/events/" + event.getId() + "/comments/" + existingComment.getId())
                         .content(toJson(updatedComment)).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
+        verify(commentService, never()).update(any());
     }
 
     @WithMockUser(roles = "ADMIN")
@@ -205,6 +207,7 @@ public class CommentControllerSecurityTest extends BaseControllerTestRunner{
         mockMvc.perform(put("/rest/events/" + event.getId() + "/comments/" + existingComment.getId())
                         .content(toJson(updatedComment)).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());
+        verify(commentService, never()).update(any());
     }
 
     @WithMockUser(roles = "USER")

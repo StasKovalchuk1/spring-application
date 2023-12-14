@@ -144,7 +144,6 @@ public class EventControllerTest extends BaseControllerTestRunner{
         verify(genreServiceMock).findByName(genre2.getName());
     }
 
-    // TODO
     @Test
     public void createEventByUserCreatesEventUsingService() throws Exception {
         final Event event = Generator.generateUpcomingEvent();

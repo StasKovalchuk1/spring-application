@@ -52,7 +52,7 @@ public class FavoriteControllerTest extends BaseControllerTestRunner{
     public void getFavoritesReturnsFavoritesByUsingFavoriteService() throws Exception {
         final User user = Generator.generateUser();
         user.setId(1337);
-        List<Event> eventsInFavorites = new ArrayList<>();
+        final List<Event> eventsInFavorites = new ArrayList<>();
         final List<Favorite> favorites = IntStream.range(0, 5).mapToObj(i -> {
             final Event event = Generator.generateUpcomingEvent();
             event.setId(Generator.randomInt());
@@ -71,9 +71,8 @@ public class FavoriteControllerTest extends BaseControllerTestRunner{
                         .principal(authMock))
                 .andReturn();
         final List<Event> result = readValue(mvcResult, new TypeReference<>() {});
-        final ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
         assertEquals(result.size(), eventsInFavorites.size());
-        verify(favoriteServiceMock).getAllFavoriteEvents(captor.capture());
+        verify(favoriteServiceMock).getAllFavoriteEvents(user);
     }
 
     //TODO does not work

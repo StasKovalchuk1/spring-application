@@ -91,7 +91,7 @@ public class EventControllerSecurityTest extends BaseControllerTestRunner{
         final Event toAccept = Generator.generateUpcomingEvent();
         mockMvc.perform(post("/rest/events/accept").content(toJson(toAccept))
                 .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isUnauthorized());
-        verify(eventService, never()).acceptEvent(toAccept);
+        verify(eventService, never()).acceptEvent(any());
     }
 
     @WithMockUser
@@ -101,7 +101,7 @@ public class EventControllerSecurityTest extends BaseControllerTestRunner{
         final Event toAccept = Generator.generateUpcomingEvent();
         mockMvc.perform(post("/rest/events/accept").content(toJson(toAccept))
                 .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isForbidden());
-        verify(eventService, never()).acceptEvent(toAccept);
+        verify(eventService, never()).acceptEvent(any());
     }
 
     @WithMockUser(roles = "ADMIN")
@@ -112,6 +112,7 @@ public class EventControllerSecurityTest extends BaseControllerTestRunner{
         final Event toAccept = Generator.generateUpcomingEvent();
         mockMvc.perform(post("/rest/events/accept").content(toJson(toAccept))
                 .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated());
+        verify(eventService).acceptEvent(toAccept);
     }
 
     @WithAnonymousUser
@@ -179,7 +180,7 @@ public class EventControllerSecurityTest extends BaseControllerTestRunner{
         final Club club = Generator.generateClub();
         mockMvc.perform(post("/rest/events/create/" + club.getName()).content(toJson(toCreate))
                 .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isUnauthorized());
-        verify(eventService, never()).createEventByUser(toCreate, club);
+        verify(eventService, never()).createEventByUser(any(), any());
     }
 
     @WithMockUser(roles = "USER")
