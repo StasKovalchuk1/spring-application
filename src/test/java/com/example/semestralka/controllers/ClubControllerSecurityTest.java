@@ -26,8 +26,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -130,6 +129,7 @@ public class ClubControllerSecurityTest extends BaseControllerTestRunner{
         Environment.setCurrentUser(user);
         final Club toRemove = Generator.generateClub();
         toRemove.setId(1337);
+        when(clubService.find(toRemove.getId())).thenReturn(toRemove);
         mockMvc.perform(delete("/rest/clubs/" + toRemove.getId()))
                 .andExpect(status().isNoContent());
         verify(clubService).delete(any());

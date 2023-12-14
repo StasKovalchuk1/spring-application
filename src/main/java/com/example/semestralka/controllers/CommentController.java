@@ -37,7 +37,7 @@ public class CommentController {
 
     @GetMapping(value = "/{eventId}/comments/all")
     public List<Comment> getAllCommentsByEventId(@PathVariable Integer eventId){
-        Event event = eventService.find(eventId);
+        final Event event = eventService.find(eventId);
         if (event==null){
             throw NotFoundException.create("Event", eventId);
         }
@@ -46,7 +46,7 @@ public class CommentController {
 
     @GetMapping(value = "/{eventId}/comments/from_first")
     public List<Comment> getAllCommentsByEventIdFromFirst(@PathVariable Integer eventId){
-        Event event = eventService.find(eventId);
+        final Event event = eventService.find(eventId);
         if (event==null){
             throw NotFoundException.create("Event", eventId);
         }
@@ -55,7 +55,7 @@ public class CommentController {
 
     @GetMapping(value = "/{eventId}/comments/from_last")
     public List<Comment> getAllCommentsByEventIdFromLast(@PathVariable Integer eventId){
-        Event event = eventService.find(eventId);
+        final Event event = eventService.find(eventId);
         if (event==null){
             throw NotFoundException.create("Event", eventId);
         }
@@ -67,8 +67,8 @@ public class CommentController {
     public ResponseEntity<Void> addComment(Authentication auth,
                                            @RequestBody Comment comment,
                                            @PathVariable Integer eventId){
-        User user = ((UserDetails) auth.getPrincipal()).getUser();
-        Event event = eventService.find(eventId);
+        final User user = ((UserDetails) auth.getPrincipal()).getUser();
+        final Event event = eventService.find(eventId);
         if (event == null) {
             throw NotFoundException.create("Event", eventId);
         }
@@ -82,11 +82,11 @@ public class CommentController {
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public void removeCommentByEventIdAndCommentId(@PathVariable Integer eventId,
                                                    @PathVariable Integer commentId){
-        Event event = eventService.find(eventId);
+        final Event event = eventService.find(eventId);
         if (event == null) {
             throw NotFoundException.create("Event", eventId);
         }
-        Comment commentToRemove = commentService.find(commentId);
+        final Comment commentToRemove = commentService.find(commentId);
         if (commentToRemove == null || !commentToRemove.getEvent().equals(event)) {
             throw NotFoundException.create("Comment", commentId);
         }
@@ -99,8 +99,8 @@ public class CommentController {
     public void editComment(@PathVariable Integer eventId,
                             @PathVariable Integer commentId,
                             @RequestBody Comment updatedComment){
-        Event event = eventService.find(eventId);
-        Comment existingComment = commentService.find(commentId);
+        final Event event = eventService.find(eventId);
+        final Comment existingComment = commentService.find(commentId);
         if (event == null) {
             throw NotFoundException.create("Event", eventId);
         }
