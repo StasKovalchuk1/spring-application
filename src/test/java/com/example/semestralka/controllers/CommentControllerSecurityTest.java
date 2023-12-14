@@ -122,10 +122,11 @@ public class CommentControllerSecurityTest extends BaseControllerTestRunner{
                         .andExpect(status().isCreated());
     }
 
-    //TODO
     @WithMockUser(roles = "ADMIN")
     @Test
-    public void addCommentWorksWithAdmin() throws Exception {}
+    public void addCommentWorksWithAdmin() throws Exception {
+        //TODO
+    }
 
     @WithAnonymousUser
     @Test
