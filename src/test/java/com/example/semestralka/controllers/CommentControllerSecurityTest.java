@@ -15,6 +15,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -99,7 +100,7 @@ public class CommentControllerSecurityTest extends BaseControllerTestRunner{
     }
 
     //TODO does not work
-//    @WithMockUser(roles = "USER")
+    @WithMockUser(roles = "USER")
     @Test
     public void addCommentWorksWithAuthorizedUser() throws Exception {
         user.setId(228);
@@ -120,6 +121,8 @@ public class CommentControllerSecurityTest extends BaseControllerTestRunner{
                         .contentType(MediaType.APPLICATION_JSON)
                         .principal(authMock))
                         .andExpect(status().isCreated());
+        final ArgumentCaptor<Comment> captor = ArgumentCaptor.forClass(Comment.class);
+        verify(commentService).save(captor.capture(), any(User.class), any(Event.class));
     }
 
     @WithMockUser(roles = "ADMIN")
