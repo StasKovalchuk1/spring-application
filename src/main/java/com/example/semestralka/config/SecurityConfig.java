@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -51,7 +52,11 @@ public class SecurityConfig {
                 // Use custom success and failure handlers
                 .formLogin(fl -> fl.successHandler(authSuccess)
                         .failureHandler(authenticationFailureHandler()))
-                .logout(lgt -> lgt.logoutSuccessHandler(authSuccess));
+                // OAuth for Facebook login
+                .oauth2ResourceServer((oauth2) -> oauth2
+                        .jwt(Customizer.withDefaults()))
+                .logout(lgt -> lgt.logoutSuccessHandler(authSuccess)
+                );
         return http.build();
     }
 
