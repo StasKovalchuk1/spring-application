@@ -8,6 +8,7 @@ import com.example.semestralka.model.User;
 import com.example.semestralka.security.model.UserDetails;
 import com.example.semestralka.services.CommentService;
 import com.example.semestralka.services.EventService;
+import com.example.semestralka.services.security.UserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,10 +16,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -26,11 +25,14 @@ import java.util.List;
 @PreAuthorize("permitAll()")
 public class CommentController {
 
+
+    private final UserDetailsService userDetailsService;
     private final EventService eventService;
     private final CommentService commentService;
 
     @Autowired
-    public CommentController(EventService eventService, CommentService commentService) {
+    public CommentController(UserDetailsService userDetailsService, EventService eventService, CommentService commentService) {
+        this.userDetailsService = userDetailsService;
         this.eventService = eventService;
         this.commentService = commentService;
     }
@@ -67,7 +69,12 @@ public class CommentController {
     public ResponseEntity<Void> addComment(Authentication auth,
                                            @RequestBody Comment comment,
                                            @PathVariable Integer eventId){
-        final User user = ((UserDetails) auth.getPrincipal()).getUser();
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(auth.getName());
+        final User user = userDetails.getUser();
+
+
+//        final User user = ((UserDetails) auth.getPrincipal()).getUser();
+
         final Event event = eventService.find(eventId);
         if (event == null) {
             throw NotFoundException.create("Event", eventId);

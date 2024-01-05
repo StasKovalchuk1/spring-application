@@ -11,6 +11,7 @@ import com.example.semestralka.model.User;
 import com.example.semestralka.security.model.UserDetails;
 import com.example.semestralka.services.CommentService;
 import com.example.semestralka.services.EventService;
+import com.example.semestralka.services.security.UserDetailsService;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,6 +27,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -47,6 +49,9 @@ public class CommentControllerSecurityTest extends BaseControllerTestRunner{
     @Autowired
     private EventService eventService;
 
+    @Autowired
+    private UserDetailsService userDetailsService;
+
     private User user;
 
     @BeforeEach
@@ -59,12 +64,15 @@ public class CommentControllerSecurityTest extends BaseControllerTestRunner{
     @AfterEach
     public void tearDown() {
         Environment.clearSecurityContext();
-        Mockito.reset(eventService, commentService);
+        Mockito.reset(userDetailsService, eventService, commentService);
     }
 
     @Configuration
     @TestConfiguration
     public static class TestConfig {
+
+        @MockBean
+        private UserDetailsService userDetailsService;
 
         @MockBean
         private CommentService commentService;
@@ -74,7 +82,7 @@ public class CommentControllerSecurityTest extends BaseControllerTestRunner{
 
         @Bean
         public CommentController commentController() {
-            return new CommentController(eventService, commentService);
+            return new CommentController(userDetailsService, eventService, commentService);
         }
     }
 
@@ -101,6 +109,7 @@ public class CommentControllerSecurityTest extends BaseControllerTestRunner{
 
     //TODO does not work
     @WithMockUser(roles = "USER")
+    @WithUserDetails
     @Test
     public void addCommentWorksWithAuthorizedUser() throws Exception {
         user.setId(228);
@@ -112,9 +121,13 @@ public class CommentControllerSecurityTest extends BaseControllerTestRunner{
 
         Authentication authMock = mock(Authentication.class);
         UserDetails userDetailsMock = mock(UserDetails.class);
+
         when(authMock.getPrincipal()).thenReturn(userDetailsMock);
+//        when(authMock.getName()).thenReturn(user.getUsername());
+        when(userDetailsService.loadUserByUsername(user.getUsername())).thenReturn(userDetailsMock);
         when(userDetailsMock.getUser()).thenReturn(user);
         when(eventService.find(event.getId())).thenReturn(event);
+
 
         mockMvc.perform(post("/rest/events/" + event.getId() + "/comments")
                         .content(toJson(comment))
@@ -128,7 +141,7 @@ public class CommentControllerSecurityTest extends BaseControllerTestRunner{
     @WithMockUser(roles = "ADMIN")
     @Test
     public void addCommentWorksWithAdmin() throws Exception {
-        //TODO
+        //todo
     }
 
     @WithAnonymousUser
