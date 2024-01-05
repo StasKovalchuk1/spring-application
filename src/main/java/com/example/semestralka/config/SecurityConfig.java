@@ -53,10 +53,10 @@ public class SecurityConfig {
                 .formLogin(fl -> fl.successHandler(authSuccess)
                         .failureHandler(authenticationFailureHandler()))
                 // OAuth for Facebook login
-                .oauth2ResourceServer((oauth2) -> oauth2
-                        .jwt(Customizer.withDefaults()))
-                .logout(lgt -> lgt.logoutSuccessHandler(authSuccess)
-                );
+//                .oauth2ResourceServer((oauth2) -> oauth2
+//                        .jwt(Customizer.withDefaults()))
+//                .logout(lgt -> lgt.logoutSuccessHandler(authSuccess))
+        ;
         return http.build();
     }
 
