@@ -69,11 +69,13 @@ public class CommentController {
     public ResponseEntity<Void> addComment(Authentication auth,
                                            @RequestBody Comment comment,
                                            @PathVariable Integer eventId){
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(auth.getName());
+        //todo WAY 2
+//        final UserDetails userDetails = userDetailsService.loadUserByUsername(auth.getName());
+//        final User user = userDetails.getUser();
+
+        //todo WAY 1
+        final UserDetails userDetails = (UserDetails) auth.getPrincipal();
         final User user = userDetails.getUser();
-
-
-//        final User user = ((UserDetails) auth.getPrincipal()).getUser();
 
         final Event event = eventService.find(eventId);
         if (event == null) {

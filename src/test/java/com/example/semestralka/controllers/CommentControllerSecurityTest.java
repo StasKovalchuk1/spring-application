@@ -109,11 +109,12 @@ public class CommentControllerSecurityTest extends BaseControllerTestRunner{
 
     //TODO does not work
     @WithMockUser(roles = "USER")
-    @WithUserDetails
+    @WithUserDetails("testUsername")
     @Test
     public void addCommentWorksWithAuthorizedUser() throws Exception {
         user.setId(228);
         user.setRole(Role.USER);
+        user.setUsername("testUsername");
         Environment.setCurrentUser(user);
         final Event event = Generator.generateUpcomingEvent();
         event.setId(1337);
@@ -122,13 +123,17 @@ public class CommentControllerSecurityTest extends BaseControllerTestRunner{
         Authentication authMock = mock(Authentication.class);
         UserDetails userDetailsMock = mock(UserDetails.class);
 
-        when(authMock.getPrincipal()).thenReturn(userDetailsMock);
+
+        //todo WAY 2 (new)
 //        when(authMock.getName()).thenReturn(user.getUsername());
-        when(userDetailsService.loadUserByUsername(user.getUsername())).thenReturn(userDetailsMock);
+//        when(userDetailsService.loadUserByUsername(user.getUsername())).thenReturn(userDetailsMock);
+//        when(userDetailsMock.getUser()).thenReturn(user);
+
+        //todo WAY 1 (old)
+        when(authMock.getPrincipal()).thenReturn(userDetailsMock);
         when(userDetailsMock.getUser()).thenReturn(user);
+
         when(eventService.find(event.getId())).thenReturn(event);
-
-
         mockMvc.perform(post("/rest/events/" + event.getId() + "/comments")
                         .content(toJson(comment))
                         .contentType(MediaType.APPLICATION_JSON)

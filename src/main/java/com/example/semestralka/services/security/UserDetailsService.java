@@ -23,6 +23,6 @@ public class UserDetailsService implements org.springframework.security.core.use
         if (user == null) {
             throw new UsernameNotFoundException("User with username " + username + " not found.");
         }
-        return new com.example.semestralka.security.model.UserDetails(user);
+        return new UserDetails(user);
     }
 }
