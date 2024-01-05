@@ -6,6 +6,7 @@ import com.example.semestralka.environment.Generator;
 import com.example.semestralka.environment.TestConfiguration;
 import com.example.semestralka.model.Role;
 import com.example.semestralka.model.User;
+import com.example.semestralka.security.model.UserDetails;
 import com.example.semestralka.services.UserService;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.AfterEach;

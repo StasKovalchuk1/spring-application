@@ -22,6 +22,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.IntStream;
 
