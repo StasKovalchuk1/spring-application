@@ -21,6 +21,13 @@ public class UserDetails implements org.springframework.security.core.userdetail
         this.authorities.addAll(authorities);
     }
 
+    public UserDetails(User user) {
+        Objects.requireNonNull(user);
+        this.user = user;
+        this.authorities = new HashSet<>();
+        addUserRole();
+    }
+
     private void addUserRole() {
         authorities.add(new SimpleGrantedAuthority(user.getRole().toString()));
     }
