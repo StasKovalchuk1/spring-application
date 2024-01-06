@@ -3,6 +3,7 @@ package com.example.semestralka.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.security.PublicKey;
 import java.util.ArrayList;
@@ -60,5 +61,9 @@ public class User extends AbstractEntity {
     @JsonIgnore
     public boolean isAdmin() {
         return role == Role.ADMIN;
+    }
+
+    public void encodePassword(PasswordEncoder encoder) {
+        this.password = encoder.encode(password);
     }
 }

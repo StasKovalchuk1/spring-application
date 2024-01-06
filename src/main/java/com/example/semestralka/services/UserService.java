@@ -79,8 +79,8 @@ public class UserService {
 
     @Transactional
     public void save(User user){
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         Objects.requireNonNull(user);
+        user.encodePassword(passwordEncoder);
         userRepository.save(user);
     }
 

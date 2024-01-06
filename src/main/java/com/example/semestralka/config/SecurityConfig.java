@@ -48,16 +48,16 @@ public class SecurityConfig {
         http.authorizeHttpRequests((auth) -> auth.anyRequest().permitAll())
                 // Return 401 by default when attempting to access a secured endpoint
                 .exceptionHandling(ehc -> ehc.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
-                .csrf(AbstractHttpConfigurer::disable)
+
+//                .csrf(AbstractHttpConfigurer::disable)
+
                 // Enable CORS
                 .cors(conf -> conf.configurationSource(corsConfigurationSource()))
                 .headers(customizer -> customizer.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
                 // Use custom success and failure handlers
                 .formLogin(fl -> fl.successHandler(authSuccess)
                         .failureHandler(authenticationFailureHandler()))
-                // OAuth for Facebook login
-//                .oauth2ResourceServer((oauth2) -> oauth2
-//                        .jwt(Customizer.withDefaults()))
+
                 .logout(lgt -> lgt.logoutSuccessHandler(authSuccess))
         ;
         return http.build();
