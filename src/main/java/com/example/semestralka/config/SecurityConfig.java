@@ -62,6 +62,26 @@ public class SecurityConfig {
         return http.build();
     }
 
+//    @Bean
+//    public SecurityFilterChain filter(HttpSecurity http) throws Exception {
+//        return http
+//                .headers(customizer -> customizer.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
+//                .authorizeRequests(
+//                        auth -> {
+//                            try {
+//                                auth
+////                                        .anyRequest().permitAll()
+//                                        .anyRequest().authenticated();
+//                            } catch (Exception e) {
+//                                throw new RuntimeException(e);
+//                            }
+//                        }
+//                )
+//                .formLogin(Customizer.withDefaults())
+//                .httpBasic(Customizer.withDefaults())
+//                .build();
+//    }
+
     private AuthenticationFailure authenticationFailureHandler() {
         return new AuthenticationFailure(objectMapper);
     }
