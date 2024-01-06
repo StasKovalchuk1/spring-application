@@ -3,20 +3,13 @@ package com.example.semestralka.services;
 import com.example.semestralka.data.FavoriteRepository;
 import com.example.semestralka.data.UserRepository;
 import com.example.semestralka.exceptions.NotFoundException;
-import com.example.semestralka.model.Comment;
-import com.example.semestralka.model.Event;
-import com.example.semestralka.model.Favorite;
 import com.example.semestralka.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.security.access.prepost.PostFilter;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -26,10 +19,13 @@ public class UserService {
 
     public final FavoriteRepository favoriteRepository;
 
+    private final PasswordEncoder passwordEncoder;
+
     @Autowired
-    public UserService(UserRepository userRepository, FavoriteRepository favoriteRepository) {
+    public UserService(UserRepository userRepository, FavoriteRepository favoriteRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.favoriteRepository = favoriteRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional(readOnly = true)
@@ -83,6 +79,7 @@ public class UserService {
 
     @Transactional
     public void save(User user){
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         Objects.requireNonNull(user);
         userRepository.save(user);
     }
