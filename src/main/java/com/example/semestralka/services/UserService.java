@@ -3,6 +3,7 @@ package com.example.semestralka.services;
 import com.example.semestralka.data.FavoriteRepository;
 import com.example.semestralka.data.UserRepository;
 import com.example.semestralka.exceptions.NotFoundException;
+import com.example.semestralka.model.Role;
 import com.example.semestralka.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
