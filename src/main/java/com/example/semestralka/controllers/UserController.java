@@ -6,6 +6,8 @@ import com.example.semestralka.model.User;
 import com.example.semestralka.security.model.UserDetails;
 import com.example.semestralka.services.UserService;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;

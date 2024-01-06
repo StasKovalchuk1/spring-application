@@ -3,11 +3,13 @@ package com.example.semestralka.config;
 import com.example.semestralka.security.AuthenticationFailure;
 import com.example.semestralka.security.AuthenticationSuccess;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.config.Customizer;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -29,6 +31,7 @@ import java.util.List;
 public class SecurityConfig {
     private final ObjectMapper objectMapper;
 
+    @Autowired
     public SecurityConfig(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
