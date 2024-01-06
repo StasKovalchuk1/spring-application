@@ -6,7 +6,6 @@ import com.example.semestralka.environment.Generator;
 import com.example.semestralka.environment.TestConfiguration;
 import com.example.semestralka.model.Role;
 import com.example.semestralka.model.User;
-import com.example.semestralka.security.model.UserDetails;
 import com.example.semestralka.services.UserService;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.AfterEach;
@@ -19,7 +18,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
@@ -64,9 +63,12 @@ public class UserControllerSecurityTest extends BaseControllerTestRunner {
         @MockBean
         private UserService userService;
 
+        @MockBean
+        private PasswordEncoder passwordEncoder;
+
         @Bean
         public UserController userController() {
-            return new UserController(userService);
+            return new UserController(userService, passwordEncoder);
         }
     }
 

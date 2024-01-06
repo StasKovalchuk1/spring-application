@@ -27,7 +27,7 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-@Profile("!test")
+//@Profile("!test")
 public class SecurityConfig {
     private final ObjectMapper objectMapper;
 
@@ -57,7 +57,7 @@ public class SecurityConfig {
                 // OAuth for Facebook login
 //                .oauth2ResourceServer((oauth2) -> oauth2
 //                        .jwt(Customizer.withDefaults()))
-//                .logout(lgt -> lgt.logoutSuccessHandler(authSuccess))
+                .logout(lgt -> lgt.logoutSuccessHandler(authSuccess))
         ;
         return http.build();
     }
