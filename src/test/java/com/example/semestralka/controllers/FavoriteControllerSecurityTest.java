@@ -97,31 +97,10 @@ public class FavoriteControllerSecurityTest extends BaseControllerTestRunner{
         verify(favoriteService, never()).getAllFavoriteEvents(any());
     }
 
-    //Todo does not work
     @WithMockUser(roles = "USER")
     @Test
     public void getFavoritesWorksForAuthorizedUser() throws Exception {
-//        user.setRole(Role.USER);
-//        user.setId(1337);
-//        Environment.setCurrentUser(user);
-//        List<Event> eventsInFavorites = new ArrayList<>();
-//        final List<Favorite> favorites = IntStream.range(0, 5).mapToObj(i -> {
-//            final Event event = Generator.generateUpcomingEvent();
-//            event.setId(Generator.randomInt());
-//            eventsInFavorites.add(event);
-//            return Generator.generateFavorite(event,user);
-//        }).toList();
-//        user.setFavorites(favorites);
-//
-//        Authentication authMock = mock(Authentication.class);
-//        UserDetails userDetailsMock = mock(UserDetails.class);
-//        when(authMock.getPrincipal()).thenReturn(userDetailsMock);
-//        when(userDetailsMock.getUser()).thenReturn(user);
-//        when(favoriteService.getAllFavoriteEvents(user)).thenReturn(eventsInFavorites);
-//        mockMvc.perform(get("/rest/favorites")
-//                .principal(authMock))
-//                .andExpect(status().isOk());
-//        verify(favoriteService).getAllFavoriteEvents(user);
+        //todo
     }
 
     @WithAnonymousUser
@@ -143,6 +122,7 @@ public class FavoriteControllerSecurityTest extends BaseControllerTestRunner{
     @Test
     public void getUpcomingFavoritesWorksForAuthorizedUser() throws Exception {
         user.setRole(Role.USER);
+        //todo
     }
 
     @WithAnonymousUser
@@ -170,6 +150,7 @@ public class FavoriteControllerSecurityTest extends BaseControllerTestRunner{
     @Test
     public void addToFavoriteWorksForAuthorizedUser() throws Exception {
         user.setRole(Role.USER);
+        //todo
     }
 
     @WithAnonymousUser
@@ -197,5 +178,6 @@ public class FavoriteControllerSecurityTest extends BaseControllerTestRunner{
     @Test
     public void removeEventFromFavoriteWorksForAuthorizedUser() throws Exception {
         user.setRole(Role.USER);
+        //todo
     }
 }
