@@ -63,9 +63,12 @@ public class UserControllerSecurityTest extends BaseControllerTestRunner {
         @MockBean
         private UserService userService;
 
+        @MockBean
+        private PasswordEncoder passwordEncoder;
+
         @Bean
         public UserController userController() {
-            return new UserController(userService);
+            return new UserController(userService, passwordEncoder);
         }
     }
 
