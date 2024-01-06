@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,6 +21,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -43,26 +45,51 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+//    @Bean
+//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//        final AuthenticationSuccess authSuccess = authenticationSuccess();
+//        // Allow through everything, it will be dealt with using security annotations on methods
+//        http.authorizeHttpRequests((auth) -> auth.anyRequest().permitAll())
+//                // Return 401 by default when attempting to access a secured endpoint
+//                .exceptionHandling(ehc -> ehc.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
+//                .csrf(AbstractHttpConfigurer::disable)
+//                // Enable CORS
+//                .cors(conf -> conf.configurationSource(corsConfigurationSource()))
+//                .headers(customizer -> customizer.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
+//                // Use custom success and failure handlers
+//
+//                .formLogin(fl -> fl.successHandler(authSuccess)
+//                        .failureHandler(authenticationFailureHandler()))
+//
+////                .formLogin(Customizer.withDefaults())
+////                .httpBasic(Customizer.withDefaults())
+//
+//                // OAuth for Facebook login
+////                .oauth2ResourceServer((oauth2) -> oauth2
+////                        .jwt(Customizer.withDefaults()))
+////                .logout(lgt -> lgt.logoutSuccessHandler(authSuccess))
+//        ;
+//        return http.build();
+//    }
+
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        final AuthenticationSuccess authSuccess = authenticationSuccess();
-        // Allow through everything, it will be dealt with using security annotations on methods
-        http.authorizeHttpRequests((auth) -> auth.anyRequest().permitAll())
-                // Return 401 by default when attempting to access a secured endpoint
-                .exceptionHandling(ehc -> ehc.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
-                .csrf(AbstractHttpConfigurer::disable)
-                // Enable CORS
-                .cors(conf -> conf.configurationSource(corsConfigurationSource()))
+    public SecurityFilterChain filter(HttpSecurity http) throws Exception {
+        return http
                 .headers(customizer -> customizer.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
-                // Use custom success and failure handlers
-                .formLogin(fl -> fl.successHandler(authSuccess)
-                        .failureHandler(authenticationFailureHandler()))
-                // OAuth for Facebook login
-//                .oauth2ResourceServer((oauth2) -> oauth2
-//                        .jwt(Customizer.withDefaults()))
-//                .logout(lgt -> lgt.logoutSuccessHandler(authSuccess))
-        ;
-        return http.build();
+                .authorizeRequests(
+                        auth -> {
+                            try {
+                                auth
+//                                        .anyRequest().permitAll()
+                                        .anyRequest().authenticated();
+                            } catch (Exception e) {
+                                throw new RuntimeException(e);
+                            }
+                         }
+                )
+                .formLogin(Customizer.withDefaults())
+                .httpBasic(Customizer.withDefaults())
+                .build();
     }
 
     private AuthenticationFailure authenticationFailureHandler() {
