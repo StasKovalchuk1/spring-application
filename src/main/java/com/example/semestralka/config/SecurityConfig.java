@@ -51,7 +51,7 @@ public class SecurityConfig {
                 // Return 401 by default when attempting to access a secured endpoint
                 .exceptionHandling(ehc -> ehc.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
 
-//                .csrf(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable)
 
                 // Enable CORS
                 .cors(conf -> conf.configurationSource(corsConfigurationSource()))

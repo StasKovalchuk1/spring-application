@@ -75,7 +75,7 @@ public class EventController {
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping(value = "/create/{clubName}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> createEventByUser(@RequestBody Event event, @PathVariable String clubName){
+    public ResponseEntity<Void> createEventByUser(@RequestBody Event event, @PathVariable String clubName) {
         final Club club = clubService.findByName(clubName);
         eventService.createEventByUser(event, club);
         final HttpHeaders headers = RestUtils.createLocationHeaderFromCurrentUri("/{id}", event.getId());
