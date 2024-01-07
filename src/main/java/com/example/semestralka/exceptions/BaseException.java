@@ -1,8 +1,5 @@
 package com.example.semestralka.exceptions;
 
-/**
- * Base for all application-specific exceptions.
- */
 public class BaseException extends RuntimeException {
 
     public BaseException() {

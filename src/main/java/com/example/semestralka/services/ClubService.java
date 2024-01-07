@@ -1,7 +1,6 @@
 package com.example.semestralka.services;
 
 import com.example.semestralka.data.ClubRepository;
-import com.example.semestralka.data.EventRepository;
 import com.example.semestralka.data.FavoriteRepository;
 import com.example.semestralka.exceptions.NotFoundException;
 import com.example.semestralka.model.Club;
@@ -15,13 +14,11 @@ import java.util.Objects;
 public class ClubService {
 
     private final ClubRepository clubRepo;
-    private final EventRepository eventRepo;
     private final FavoriteRepository favoriteRepo;
 
     @Autowired
-    public ClubService(ClubRepository clubRepo, EventRepository eventRepo, FavoriteRepository favoriteRepo) {
+    public ClubService(ClubRepository clubRepo, FavoriteRepository favoriteRepo) {
         this.clubRepo = clubRepo;
-        this.eventRepo = eventRepo;
         this.favoriteRepo = favoriteRepo;
     }
 

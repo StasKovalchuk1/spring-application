@@ -1,8 +1,5 @@
 package com.example.semestralka.exceptions;
 
-/**
- * Indicates that a resource was not found.
- */
 public class NotFoundException extends BaseException {
 
     public NotFoundException(String message) {

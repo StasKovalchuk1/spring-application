@@ -1,5 +1,6 @@
 package com.example.semestralka.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,6 +18,7 @@ public class Club extends AbstractEntity{
     public String name;
 
     @OneToMany(mappedBy = "club")
+    @JsonIgnore
     public List<Event> events;
 
     public void addEvent(Event event){

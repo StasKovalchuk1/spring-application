@@ -16,10 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/*
-    getAllUpcomingEventsByClub хочется убрать до event Controller,
-    добвить update()
- */
 @RestController
 @RequestMapping("/rest/clubs")
 @PreAuthorize("permitAll()")
@@ -75,5 +71,4 @@ public class ClubController {
             clubService.delete(clubToRemove);
         } else throw NotFoundException.create("Club", id);
     }
-
 }

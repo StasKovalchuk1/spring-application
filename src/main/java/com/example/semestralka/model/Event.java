@@ -1,11 +1,11 @@
 package com.example.semestralka.model;
 
+
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -31,9 +31,11 @@ public class Event extends AbstractEntity{
     @ManyToMany
     @OrderBy("name")
     @JoinTable(name = "event_genre")
+//    @JsonIgnore
     private List<Genre> genres;
 
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
+//    @JsonIgnore
     private List<Comment> comments;
 
     @ManyToOne
