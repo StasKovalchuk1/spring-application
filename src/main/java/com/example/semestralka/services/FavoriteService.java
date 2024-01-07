@@ -37,17 +37,6 @@ public class FavoriteService {
         return favoriteRepo.findById(id).orElse(null);
     }
 
-//    @Transactional(readOnly = true)
-//    @PreAuthorize("hasRole('ROLE_USER')")
-//    @PostFilter("filterObject.user.username == principal.username")
-//    public Iterable<Favorite> findAll(){
-//        try {
-//            return favoriteRepo.findAll();
-//        } catch (DataAccessException e) {
-//            throw new NotFoundException("There are no favorite events");
-//        }
-//    }
-
     @Transactional(readOnly = true)
     public List<Event> getAllFavoriteEvents(User user){
         try {

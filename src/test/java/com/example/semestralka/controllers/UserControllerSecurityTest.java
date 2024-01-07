@@ -4,8 +4,10 @@ import com.example.semestralka.config.SecurityConfig;
 import com.example.semestralka.environment.Environment;
 import com.example.semestralka.environment.Generator;
 import com.example.semestralka.environment.TestConfiguration;
+import com.example.semestralka.environment.WithCustomMockUser;
 import com.example.semestralka.model.Role;
 import com.example.semestralka.model.User;
+import com.example.semestralka.security.model.UserDetails;
 import com.example.semestralka.services.UserService;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.AfterEach;
@@ -18,6 +20,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -62,8 +65,6 @@ public class UserControllerSecurityTest extends BaseControllerTestRunner {
 
         @MockBean
         private UserService userService;
-
-
 
         @Bean
         public UserController userController() {
@@ -125,22 +126,54 @@ public class UserControllerSecurityTest extends BaseControllerTestRunner {
         verify(userService).save(toRegister);
     }
 
-    @WithMockUser
+    @WithCustomMockUser(id = 228, username = "testUsername", role = Role.USER)
     @Test
     public void updateUserWorkForAuthorizedUser() throws Exception {
-        //todo
+        when(userService.exists(228)).thenReturn(true);
+        final User updatedUser = new User();
+        //only username was updated
+        updatedUser.setUsername("Daniil");
+        updatedUser.setId(228);
+        updatedUser.setRole(Role.USER);
+
+        mockMvc.perform(put("/rest/users/myProfile/update")
+                        .content(toJson(updatedUser))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        verify(userService).update(any(User.class));
     }
 
-    @WithMockUser(roles = "ADMIN")
+    @WithCustomMockUser(id = 228, username = "testUsername", role = Role.ADMIN)
     @Test
-    public void updateUserThrowsForbiddenForAdmin(){
-        //todo
+    public void updateUserThrowsForbiddenForAdmin() throws Exception {
+        when(userService.exists(228)).thenReturn(true);
+        final User updatedUser = new User();
+        //only username was updated
+        updatedUser.setUsername("Daniil");
+        updatedUser.setId(228);
+        updatedUser.setRole(Role.USER);
+
+        mockMvc.perform(put("/rest/users/myProfile/update")
+                        .content(toJson(updatedUser))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+        verify(userService, never()).update(any(User.class));
     }
 
     @WithAnonymousUser
     @Test
-    public void updateUserThrowsUnauthorizedForAnonymousUser(){
-        //todo
+    public void updateUserThrowsUnauthorizedForAnonymousUser() throws Exception {
+        final User updatedUser = new User();
+        //only username was updated
+        updatedUser.setUsername("Daniil");
+        updatedUser.setId(228);
+        updatedUser.setRole(Role.USER);
+
+        mockMvc.perform(put("/rest/users/myProfile/update")
+                        .content(toJson(updatedUser))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
+        verify(userService, never()).update(any(User.class));
     }
 
     @WithMockUser(roles = "ADMIN")
@@ -182,21 +215,27 @@ public class UserControllerSecurityTest extends BaseControllerTestRunner {
         verify(userService, never()).delete(any());
     }
 
-    @WithMockUser
+    @WithCustomMockUser(id = 228, username = "testUsername", role = Role.USER)
     @Test
-    public void deleteAccountWorksForRegularUser(){
-        //todo
+    public void deleteAccountWorksForRegularUser() throws Exception {
+        mockMvc.perform(delete("/rest/users/myProfile/delete"))
+                .andExpect(status().isNoContent());
+        verify(userService).delete(any(User.class));
     }
 
-    @WithMockUser(roles = "ADMIN")
+    @WithCustomMockUser(id = 228, username = "testUsername", role = Role.ADMIN)
     @Test
-    public void deleteAccountThrowsForbiddenForAdmin(){
-        //todo
+    public void deleteAccountThrowsForbiddenForAdmin() throws Exception {
+        mockMvc.perform(delete("/rest/users/myProfile/delete"))
+                .andExpect(status().isForbidden());
+        verify(userService, never()).delete(any(User.class));
     }
 
     @WithAnonymousUser
     @Test
-    public void deleteAccountThrowsUnauthorizedForAnonymousUser(){
-        //todo
+    public void deleteAccountThrowsUnauthorizedForAnonymousUser() throws Exception {
+        mockMvc.perform(delete("/rest/users/myProfile/delete"))
+                .andExpect(status().isUnauthorized());
+        verify(userService, never()).delete(any(User.class));
     }
 }

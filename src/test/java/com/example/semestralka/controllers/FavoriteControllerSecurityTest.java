@@ -4,6 +4,7 @@ import com.example.semestralka.config.SecurityConfig;
 import com.example.semestralka.environment.Environment;
 import com.example.semestralka.environment.Generator;
 import com.example.semestralka.environment.TestConfiguration;
+import com.example.semestralka.environment.WithCustomMockUser;
 import com.example.semestralka.model.Event;
 import com.example.semestralka.model.Favorite;
 import com.example.semestralka.model.Role;
@@ -97,7 +98,7 @@ public class FavoriteControllerSecurityTest extends BaseControllerTestRunner{
         verify(favoriteService, never()).getAllFavoriteEvents(any());
     }
 
-    @WithMockUser(roles = "USER")
+    @WithCustomMockUser(id = 228, username = "testUsername", role = Role.USER)
     @Test
     public void getFavoritesWorksForAuthorizedUser() throws Exception {
         //todo

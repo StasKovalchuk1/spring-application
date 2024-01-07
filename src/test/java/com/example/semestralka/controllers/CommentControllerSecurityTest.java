@@ -110,7 +110,7 @@ public class CommentControllerSecurityTest extends BaseControllerTestRunner{
         verify(commentService, never()).save(any(), any(), any());
     }
 
-    //TODO does not work
+
     @WithCustomMockUser(id = 228, username = "testUsername", role = Role.USER)
     @Test
     public void addCommentWorksWithAuthorizedUser() throws Exception {
@@ -127,10 +127,20 @@ public class CommentControllerSecurityTest extends BaseControllerTestRunner{
         verify(commentService).save(captor.capture(), any(User.class), any(Event.class));
     }
 
-    @WithMockUser(roles = "ADMIN")
+    @WithCustomMockUser(id = 228, username = "testUsername", role = Role.ADMIN)
     @Test
     public void addCommentWorksWithAdmin() throws Exception {
-        //todo
+        final Event event = Generator.generateUpcomingEvent();
+        event.setId(1337);
+        final Comment comment = Generator.generateComment();
+
+        when(eventService.find(event.getId())).thenReturn(event);
+        mockMvc.perform(post("/rest/events/" + event.getId() + "/comments")
+                        .content(toJson(comment))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+        final ArgumentCaptor<Comment> captor = ArgumentCaptor.forClass(Comment.class);
+        verify(commentService).save(captor.capture(), any(User.class), any(Event.class));
     }
 
     @WithAnonymousUser
@@ -216,14 +226,15 @@ public class CommentControllerSecurityTest extends BaseControllerTestRunner{
         verify(commentService, never()).update(any());
     }
 
-    @WithMockUser(roles = "USER")
+    @WithCustomMockUser(id = 228, username = "testUsername", role = Role.USER)
     @Test
     public void editCommentWorksWithAuthorizedUser() throws Exception {
-        user.setRole(Role.USER);
-        Environment.setCurrentUser(user);
+        user.setId(228);
         final Event event = Generator.generateUpcomingEvent();
         event.setId(228);
         final Comment existingComment = Generator.generateComment();
+
+        existingComment.setUser(user);
         existingComment.setId(1337);
         existingComment.setEvent(event);
         event.addComment(existingComment);
