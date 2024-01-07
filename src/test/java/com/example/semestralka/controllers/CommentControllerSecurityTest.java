@@ -4,6 +4,7 @@ import com.example.semestralka.config.SecurityConfig;
 import com.example.semestralka.environment.Environment;
 import com.example.semestralka.environment.Generator;
 import com.example.semestralka.environment.TestConfiguration;
+import com.example.semestralka.environment.WithCustomMockUser;
 import com.example.semestralka.model.Comment;
 import com.example.semestralka.model.Event;
 import com.example.semestralka.model.Role;
@@ -23,13 +24,18 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.test.context.support.WithAnonymousUser;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextImpl;
+import org.springframework.security.test.context.support.*;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.lang.annotation.Annotation;
+import java.util.HashSet;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -108,36 +114,17 @@ public class CommentControllerSecurityTest extends BaseControllerTestRunner{
     }
 
     //TODO does not work
-    @WithMockUser(roles = "USER")
-    @WithUserDetails("testUsername")
+    @WithCustomMockUser(id = 228, username = "testUsername", role = Role.USER)
     @Test
     public void addCommentWorksWithAuthorizedUser() throws Exception {
-        user.setId(228);
-        user.setRole(Role.USER);
-        user.setUsername("testUsername");
-        Environment.setCurrentUser(user);
         final Event event = Generator.generateUpcomingEvent();
         event.setId(1337);
         final Comment comment = Generator.generateComment();
 
-        Authentication authMock = mock(Authentication.class);
-        UserDetails userDetailsMock = mock(UserDetails.class);
-
-
-        //todo WAY 2 (new)
-//        when(authMock.getName()).thenReturn(user.getUsername());
-//        when(userDetailsService.loadUserByUsername(user.getUsername())).thenReturn(userDetailsMock);
-//        when(userDetailsMock.getUser()).thenReturn(user);
-
-        //todo WAY 1 (old)
-        when(authMock.getPrincipal()).thenReturn(userDetailsMock);
-        when(userDetailsMock.getUser()).thenReturn(user);
-
         when(eventService.find(event.getId())).thenReturn(event);
         mockMvc.perform(post("/rest/events/" + event.getId() + "/comments")
                         .content(toJson(comment))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .principal(authMock))
+                        .contentType(MediaType.APPLICATION_JSON))
                         .andExpect(status().isCreated());
         final ArgumentCaptor<Comment> captor = ArgumentCaptor.forClass(Comment.class);
         verify(commentService).save(captor.capture(), any(User.class), any(Event.class));

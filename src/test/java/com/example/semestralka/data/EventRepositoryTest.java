@@ -1,11 +1,13 @@
 package com.example.semestralka.data;
 
 import com.example.semestralka.SemestralkaApplication;
+import com.example.semestralka.environment.TestConfiguration;
 import com.example.semestralka.model.Club;
 import com.example.semestralka.model.Event;
 import com.example.semestralka.model.Genre;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.json.AutoConfigureJson;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
@@ -19,8 +21,8 @@ import static com.example.semestralka.environment.Generator.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
-@ComponentScan(basePackageClasses = SemestralkaApplication.class, excludeFilters = {
-        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE)})
+@ComponentScan(basePackageClasses = SemestralkaApplication.class, excludeFilters = {@ComponentScan.Filter(type = FilterType.ANNOTATION, classes = TestConfiguration.class)})
+@AutoConfigureJson
 @ActiveProfiles("test")
 public class EventRepositoryTest {
 
