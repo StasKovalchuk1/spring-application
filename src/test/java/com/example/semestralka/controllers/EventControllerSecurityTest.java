@@ -87,7 +87,9 @@ public class EventControllerSecurityTest extends BaseControllerTestRunner{
     @Test
     public void acceptEventThrowsUnauthorizedForAnonymousAccess() throws Exception {
         final Event toAccept = Generator.generateUpcomingEvent();
-        mockMvc.perform(post("/rest/events/accept").content(toJson(toAccept))
+        toAccept.setId(228);
+        when(eventService.find(toAccept.getId())).thenReturn(toAccept);
+        mockMvc.perform(post("/rest/events/228/accept").content(toJson(toAccept))
                 .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isUnauthorized());
         verify(eventService, never()).acceptEvent(any());
     }
@@ -97,7 +99,9 @@ public class EventControllerSecurityTest extends BaseControllerTestRunner{
     public void acceptEventThrowsForbiddenForRegularUser() throws Exception {
         Environment.setCurrentUser(user);
         final Event toAccept = Generator.generateUpcomingEvent();
-        mockMvc.perform(post("/rest/events/accept").content(toJson(toAccept))
+        toAccept.setId(228);
+        when(eventService.find(toAccept.getId())).thenReturn(toAccept);
+        mockMvc.perform(post("/rest/events/228/accept").content(toJson(toAccept))
                 .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isForbidden());
         verify(eventService, never()).acceptEvent(any());
     }
@@ -108,7 +112,9 @@ public class EventControllerSecurityTest extends BaseControllerTestRunner{
         user.setRole(Role.ADMIN);
         Environment.setCurrentUser(user);
         final Event toAccept = Generator.generateUpcomingEvent();
-        mockMvc.perform(post("/rest/events/accept").content(toJson(toAccept))
+        toAccept.setId(228);
+        when(eventService.find(toAccept.getId())).thenReturn(toAccept);
+        mockMvc.perform(post("/rest/events/228/accept").content(toJson(toAccept))
                 .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated());
         verify(eventService).acceptEvent(toAccept);
     }

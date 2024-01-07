@@ -75,33 +75,31 @@ public class FavoriteControllerTest extends BaseControllerTestRunner{
         verify(favoriteServiceMock).getAllFavoriteEvents(user);
     }
 
-    //TODO does not work
     @Test
     public void getUpcomingFavoritesReturnsUpcomingFavoritesByUsingFavoriteService() throws Exception {
-//        final User user = Generator.generateUser();
-//        user.setId(1337);
-//        List<Event> eventsInFavorites = new ArrayList<>();
-//        final List<Favorite> favorites = IntStream.range(0, 5).mapToObj(i -> {
-//            final Event event = Generator.generateUpcomingEvent();
-//            event.setId(Generator.randomInt());
-//            eventsInFavorites.add(event);
-//            return Generator.generateFavorite(event,user);
-//        }).toList();
-//        user.setFavorites(favorites);
-//
-//        Authentication authMock = mock(Authentication.class);
-//        UserDetails userDetailsMock = mock(UserDetails.class);
-//        when(authMock.getPrincipal()).thenReturn(userDetailsMock);
-//        when(userDetailsMock.getUser()).thenReturn(user);
-//        when(favoriteServiceMock.getAllFavoriteUpcomingEvents(user)).thenReturn(eventsInFavorites);
-//
-//        final MvcResult mvcResult = mockMvc.perform(get("/rest/favorites/upcoming")
-//                        .principal(authMock))
-//                .andReturn();
-//        final List<Event> result = readValue(mvcResult, new TypeReference<>() {});
-//        final ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
-//        assertEquals(result.size(), eventsInFavorites.size());
-//        verify(favoriteServiceMock).getAllFavoriteEvents(captor.capture());
+        final User user = Generator.generateUser();
+        user.setId(1337);
+        List<Event> eventsInFavorites = new ArrayList<>();
+        final List<Favorite> favorites = IntStream.range(0, 5).mapToObj(i -> {
+            final Event event = Generator.generateUpcomingEvent();
+            event.setId(Generator.randomInt());
+            eventsInFavorites.add(event);
+            return Generator.generateFavorite(event,user);
+        }).toList();
+        user.setFavorites(favorites);
+
+        Authentication authMock = mock(Authentication.class);
+        UserDetails userDetailsMock = mock(UserDetails.class);
+        when(authMock.getPrincipal()).thenReturn(userDetailsMock);
+        when(userDetailsMock.getUser()).thenReturn(user);
+        when(favoriteServiceMock.getAllFavoriteUpcomingEvents(user)).thenReturn(eventsInFavorites);
+
+        final MvcResult mvcResult = mockMvc.perform(get("/rest/favorites/upcoming")
+                        .principal(authMock))
+                .andReturn();
+        final List<Event> result = readValue(mvcResult, new TypeReference<>() {});
+        assertEquals(result.size(), eventsInFavorites.size());
+        verify(favoriteServiceMock).getAllFavoriteUpcomingEvents(any(User.class));
     }
 
     @Test

@@ -218,18 +218,25 @@ public class CommentControllerTest extends BaseControllerTestRunner{
 
     @Test
     public void editCommentUpdatesCommentByUsingCommentService() throws Exception {
+        final User user = Generator.generateUser();
+        user.setId(111);
         final Event event = Generator.generateUpcomingEvent();
         event.setId(228);
         final Comment existingComment = Generator.generateComment();
         existingComment.setId(1337);
         existingComment.setEvent(event);
+        existingComment.setUser(user);
         event.addComment(existingComment);
 
+        Authentication authMock = mock(Authentication.class);
+        UserDetails userDetailsMock = mock(UserDetails.class);
+        when(authMock.getPrincipal()).thenReturn(userDetailsMock);
+        when(userDetailsMock.getUser()).thenReturn(user);
         final Comment updatedComment = Generator.generateComment();
-
         when(eventServiceMock.find(event.getId())).thenReturn(event);
         when(commentServiceMock.find(existingComment.getId())).thenReturn(existingComment);
         mockMvc.perform(put("/rest/events/" + event.getId() + "/comments/" + existingComment.getId())
+                        .principal(authMock)
                         .content(toJson(updatedComment)).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
         verify(commentServiceMock).update(existingComment);
