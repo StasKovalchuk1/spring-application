@@ -16,7 +16,7 @@ public class Club extends AbstractEntity{
     @Column(nullable = false)
     public String name;
 
-    @OneToMany(mappedBy = "club", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "club")
     public List<Event> events;
 
     public void addEvent(Event event){

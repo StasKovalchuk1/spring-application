@@ -100,6 +100,8 @@ public class EventController {
         final Event eventToUpdate = eventService.find(id);
         if (eventToUpdate == null || !eventService.exists(id)) throw NotFoundException.create("Event", id);
         updatedEvent.setId(id);
+        updatedEvent.setClub(eventToUpdate.getClub());
+        updatedEvent.setAccepted(true);
         eventService.update(updatedEvent);
     }
 }

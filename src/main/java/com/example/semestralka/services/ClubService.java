@@ -2,10 +2,9 @@ package com.example.semestralka.services;
 
 import com.example.semestralka.data.ClubRepository;
 import com.example.semestralka.data.EventRepository;
+import com.example.semestralka.data.FavoriteRepository;
 import com.example.semestralka.exceptions.NotFoundException;
 import com.example.semestralka.model.Club;
-import com.example.semestralka.model.Event;
-import com.example.semestralka.model.Genre;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -17,11 +16,13 @@ public class ClubService {
 
     private final ClubRepository clubRepo;
     private final EventRepository eventRepo;
+    private final FavoriteRepository favoriteRepo;
 
     @Autowired
-    public ClubService(ClubRepository clubRepo, EventRepository eventRepo) {
+    public ClubService(ClubRepository clubRepo, EventRepository eventRepo, FavoriteRepository favoriteRepo) {
         this.clubRepo = clubRepo;
         this.eventRepo = eventRepo;
+        this.favoriteRepo = favoriteRepo;
     }
 
     @Transactional(readOnly = true)
@@ -63,13 +64,14 @@ public class ClubService {
     public void delete(Club club){
         Objects.requireNonNull(club);
         if (exists(club.getId())) {
-            for (Event e : eventRepo.getAllUpcomingByClub(club)){
-                e.setClub(null);
-                e.setAccepted(false);
-                eventRepo.save(e);
-            }
+            club.getEvents().forEach(event -> event.setAccepted(false));
+            club.getEvents().forEach(event -> event.setClub(null));
+
+            club.getEvents().forEach(event -> favoriteRepo.deleteAllByEventId(event.getId()));
+
             clubRepo.delete(club);
         }
+
     }
 
     public boolean exists(Integer id){
