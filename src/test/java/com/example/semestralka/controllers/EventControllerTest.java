@@ -78,8 +78,10 @@ public class EventControllerTest extends BaseControllerTestRunner{
     @Test
     public void acceptEventAcceptsEventUsingService() throws Exception{
         final Event event = Generator.generateUpcomingEvent();
+        event.setId(228);
         event.setAccepted(false);
-        mockMvc.perform(post("/rest/events/accept").content(toJson(event))
+        when(eventServiceMock.find(event.getId())).thenReturn(event);
+        mockMvc.perform(post("/rest/events/228/accept").content(toJson(event))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isCreated());
         verify(eventServiceMock).acceptEvent(event);
     }

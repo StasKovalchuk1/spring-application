@@ -13,6 +13,7 @@ import com.example.semestralka.security.model.UserDetails;
 import com.example.semestralka.services.ClubService;
 import com.example.semestralka.services.EventService;
 import com.example.semestralka.services.FavoriteService;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,11 +29,13 @@ import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -101,7 +104,21 @@ public class FavoriteControllerSecurityTest extends BaseControllerTestRunner{
     @WithCustomMockUser(id = 228, username = "testUsername", role = Role.USER)
     @Test
     public void getFavoritesWorksForAuthorizedUser() throws Exception {
-        //todo
+        user.setId(228);
+        final List<Event> eventsInFavorites = new ArrayList<>();
+        final List<Favorite> favorites = IntStream.range(0, 5).mapToObj(i -> {
+            final Event event = Generator.generateUpcomingEvent();
+            event.setId(Generator.randomInt());
+            eventsInFavorites.add(event);
+            return Generator.generateFavorite(event,user);
+        }).toList();
+        user.setFavorites(favorites);
+        when(favoriteService.getAllFavoriteEvents(any(User.class))).thenReturn(eventsInFavorites);
+        final MvcResult mvcResult = mockMvc.perform(get("/rest/favorites"))
+                .andReturn();
+        final List<Event> result = readValue(mvcResult, new TypeReference<>() {});
+        assertEquals(result.size(), eventsInFavorites.size());
+        verify(favoriteService).getAllFavoriteEvents(any(User.class));
     }
 
     @WithAnonymousUser
@@ -119,11 +136,25 @@ public class FavoriteControllerSecurityTest extends BaseControllerTestRunner{
         verify(favoriteService, never()).getAllFavoriteUpcomingEvents(any());
     }
 
-    @WithMockUser(roles = "USER")
+    @WithCustomMockUser(id = 228, username = "testUsername", role = Role.USER)
     @Test
     public void getUpcomingFavoritesWorksForAuthorizedUser() throws Exception {
-        user.setRole(Role.USER);
-        //todo
+        user.setId(228);
+        List<Event> eventsInFavorites = new ArrayList<>();
+        final List<Favorite> favorites = IntStream.range(0, 5).mapToObj(i -> {
+            final Event event = Generator.generateUpcomingEvent();
+            event.setId(Generator.randomInt());
+            eventsInFavorites.add(event);
+            return Generator.generateFavorite(event,user);
+        }).toList();
+        user.setFavorites(favorites);
+        when(favoriteService.getAllFavoriteUpcomingEvents(any(User.class))).thenReturn(eventsInFavorites);
+
+        final MvcResult mvcResult = mockMvc.perform(get("/rest/favorites/upcoming"))
+                .andReturn();
+        final List<Event> result = readValue(mvcResult, new TypeReference<>() {});
+        assertEquals(result.size(), eventsInFavorites.size());
+        verify(favoriteService).getAllFavoriteUpcomingEvents(any(User.class));
     }
 
     @WithAnonymousUser
@@ -147,11 +178,17 @@ public class FavoriteControllerSecurityTest extends BaseControllerTestRunner{
         verify(favoriteService, never()).save(any(),any());
     }
 
-    @WithMockUser(roles = "USER")
+    @WithCustomMockUser(id = 228, username = "testUsername", role = Role.USER)
     @Test
     public void addToFavoriteWorksForAuthorizedUser() throws Exception {
-        user.setRole(Role.USER);
-        //todo
+        final Event event = Generator.generateUpcomingEvent();
+        event.setId(1337);
+        final User user = Generator.generateUser();
+        user.setId(228);
+        when(eventService.find(event.getId())).thenReturn(event);
+        mockMvc.perform(post("/rest/favorites/" + event.getId()))
+                .andExpect(status().isCreated());
+        verify(favoriteService).save(any(Event.class), any(User.class));
     }
 
     @WithAnonymousUser
@@ -175,10 +212,14 @@ public class FavoriteControllerSecurityTest extends BaseControllerTestRunner{
         verify(favoriteService, never()).delete(any(), any());
     }
 
-    @WithMockUser(roles = "USER")
+    @WithCustomMockUser(id = 228, username = "testUsername", role = Role.USER)
     @Test
     public void removeEventFromFavoriteWorksForAuthorizedUser() throws Exception {
-        user.setRole(Role.USER);
-        //todo
+        final Event event = Generator.generateUpcomingEvent();
+        event.setId(1337);
+        when(eventService.find(event.getId())).thenReturn(event);
+        mockMvc.perform(delete("/rest/favorites/" + event.getId()))
+                .andExpect(status().isNoContent());
+        verify(favoriteService).delete(any(Event.class), any(User.class));
     }
 }
