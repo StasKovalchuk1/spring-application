@@ -1,5 +1,6 @@
 package com.example.semestralka.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
@@ -15,7 +16,7 @@ public class Club extends AbstractEntity{
     @Column(nullable = false)
     public String name;
 
-    @OneToMany(mappedBy = "club")
+    @OneToMany(mappedBy = "club", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<Event> events;
 
     public void addEvent(Event event){

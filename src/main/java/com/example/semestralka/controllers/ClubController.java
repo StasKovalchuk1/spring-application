@@ -60,7 +60,7 @@ public class ClubController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> createClub(@RequestBody Club club){
+    public ResponseEntity<Void> create(@RequestBody Club club){
         clubService.save(club);
         final HttpHeaders headers = RestUtils.createLocationHeaderFromCurrentUri("/{id}", club.getId());
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
@@ -69,7 +69,7 @@ public class ClubController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeClub(@PathVariable Integer id) {
+    public void remove(@PathVariable Integer id) {
         final Club clubToRemove = clubService.find(id);
         if (clubToRemove!=null) {
             clubService.delete(clubToRemove);

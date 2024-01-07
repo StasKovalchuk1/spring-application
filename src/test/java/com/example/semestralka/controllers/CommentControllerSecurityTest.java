@@ -55,8 +55,7 @@ public class CommentControllerSecurityTest extends BaseControllerTestRunner{
     @Autowired
     private EventService eventService;
 
-    @Autowired
-    private UserDetailsService userDetailsService;
+
 
     private User user;
 
@@ -70,15 +69,13 @@ public class CommentControllerSecurityTest extends BaseControllerTestRunner{
     @AfterEach
     public void tearDown() {
         Environment.clearSecurityContext();
-        Mockito.reset(userDetailsService, eventService, commentService);
+        Mockito.reset(eventService, commentService);
     }
 
     @Configuration
     @TestConfiguration
     public static class TestConfig {
 
-        @MockBean
-        private UserDetailsService userDetailsService;
 
         @MockBean
         private CommentService commentService;
@@ -88,7 +85,7 @@ public class CommentControllerSecurityTest extends BaseControllerTestRunner{
 
         @Bean
         public CommentController commentController() {
-            return new CommentController(userDetailsService, eventService, commentService);
+            return new CommentController(eventService, commentService);
         }
     }
 

@@ -46,10 +46,11 @@ public class EventController {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping(value = "/accept",consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> acceptEvent(@RequestBody Event event){
-        eventService.acceptEvent(event);
-        final HttpHeaders headers = RestUtils.createLocationHeaderFromCurrentUri("/{id}", event.getId());
+    @PostMapping(value = "{id}/accept")
+    public ResponseEntity<Void> acceptEvent(@PathVariable Integer id){
+        final Event toAccept = eventService.find(id);
+        eventService.acceptEvent(toAccept);
+        final HttpHeaders headers = RestUtils.createLocationHeaderFromCurrentUri("/{id}", id);
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 
@@ -60,7 +61,7 @@ public class EventController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Event> getAllUpcomingEvents(){
+    public List<Event> getAllUpcoming(){
         return eventService.getAllUpcomingEvents();
     }
 
@@ -75,7 +76,7 @@ public class EventController {
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping(value = "/create/{clubName}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> createEventByUser(@RequestBody Event event, @PathVariable String clubName) {
+    public ResponseEntity<Void> createByUser(@RequestBody Event event, @PathVariable String clubName) {
         final Club club = clubService.findByName(clubName);
         eventService.createEventByUser(event, club);
         final HttpHeaders headers = RestUtils.createLocationHeaderFromCurrentUri("/{id}", event.getId());
@@ -85,7 +86,7 @@ public class EventController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeEvent(@PathVariable Integer id){
+    public void remove(@PathVariable Integer id){
         final Event eventToRemove = eventService.find(id);
         if (eventToRemove==null) throw NotFoundException.create("Event", id);
         eventService.delete(eventToRemove);
@@ -95,10 +96,10 @@ public class EventController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void editEvent(@PathVariable Integer id, @RequestBody Event updatedEvent){
+    public void edit(@PathVariable Integer id, @RequestBody Event updatedEvent){
         final Event eventToUpdate = eventService.find(id);
         if (eventToUpdate == null || !eventService.exists(id)) throw NotFoundException.create("Event", id);
-        if (!updatedEvent.getId().equals(eventToUpdate.getId())) throw new ValidationException("Updated event has different id");
+        updatedEvent.setId(id);
         eventService.update(updatedEvent);
     }
 }

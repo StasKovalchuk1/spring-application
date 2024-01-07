@@ -34,7 +34,7 @@ public class User extends AbstractEntity {
     @JsonIgnore
     private List<Favorite> favorites;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonIgnore
     private List<Comment> comments;
 
