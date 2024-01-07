@@ -45,12 +45,13 @@ public class Environment {
      *
      * @param user User to set as currently authenticated
      */
-    public static void setCurrentUser(User user) {
+    public static SecurityContext setCurrentUser(User user) {
         final UserDetails userDetails = new UserDetails(user, new HashSet<>());
         SecurityContext context = new SecurityContextImpl();
         context.setAuthentication(
                 new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities()));
         SecurityContextHolder.setContext(context);
+        return context;
     }
 
     public static void clearSecurityContext() {
