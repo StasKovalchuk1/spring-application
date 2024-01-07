@@ -58,6 +58,7 @@ public class UserService {
     public void update(User user){
         Objects.requireNonNull(user);
         if (exists(user.getId())) {
+            user.encodePassword(passwordEncoder);
             userRepo.save(user);
         }
     }

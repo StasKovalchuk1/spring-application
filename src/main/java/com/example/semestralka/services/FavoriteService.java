@@ -57,7 +57,7 @@ public class FavoriteService {
                 favoriteEvents.add(favorite.getEvent());
             }
             return favoriteEvents;
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             throw new NotFoundException("There are no favorite events");
         }
     }

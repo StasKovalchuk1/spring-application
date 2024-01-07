@@ -10,8 +10,8 @@ public class Favorite{
     @EmbeddedId
     private FavoriteId id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
     @MapsId("userId")
     public User user;
 
