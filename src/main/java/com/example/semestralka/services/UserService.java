@@ -75,4 +75,8 @@ public class UserService {
         Objects.requireNonNull(id);
         return userRepo.existsById(id);
     }
+
+    public String test() {
+        return "test-new";
+    }
 }
