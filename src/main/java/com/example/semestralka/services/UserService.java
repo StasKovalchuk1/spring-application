@@ -77,6 +77,6 @@ public class UserService {
     }
 
     public String test() {
-        return "test";
+        return "test-new";
     }
 }
